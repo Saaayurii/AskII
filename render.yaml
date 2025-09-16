@@ -1,0 +1,87 @@
+services:
+  # Web Service
+  - type: web
+    name: chatwoot-web
+    env: docker
+    dockerfilePath: ./Dockerfile.render
+    region: frankfurt
+    plan: starter
+    healthCheckPath: /api/v1/accounts
+    autoDeploy: false
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: SECRET_KEY_BASE
+        generateValue: true
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: chatwoot-web
+          property: host
+      - key: ENABLE_ACCOUNT_SIGNUP
+        value: false
+      - key: FORCE_SSL
+        value: true
+      - key: RAILS_SERVE_STATIC_FILES
+        value: true
+      - key: RAILS_LOG_TO_STDOUT
+        value: true
+      - key: PORT
+        value: 3000
+      # Performance optimization for free tier
+      - key: RAILS_MAX_THREADS
+        value: 3
+      - key: WEB_CONCURRENCY
+        value: 1
+      - key: SIDEKIQ_CONCURRENCY
+        value: 3
+      # Database connection
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: chatwoot-postgres
+          property: host
+      - key: POSTGRES_USERNAME
+        fromDatabase:
+          name: chatwoot-postgres
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: chatwoot-postgres
+          property: password
+      - key: POSTGRES_DATABASE
+        fromDatabase:
+          name: chatwoot-postgres
+          property: database
+      - key: DATABASE_URL
+        fromDatabase:
+          name: chatwoot-postgres
+          property: connectionString
+      # Redis connection
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: chatwoot-redis
+          property: connectionString
+      # Email settings (basic)
+      - key: MAILER_SENDER_EMAIL
+        value: "Chatwoot <support@yourdomain.com>"
+      - key: SMTP_DOMAIN
+        value: "yourdomain.com"
+      # Push notifications
+      - key: ENABLE_PUSH_RELAY_SERVER
+        value: true
+
+databases:
+  - name: chatwoot-postgres
+    databaseName: chatwoot
+    user: chatwoot
+    region: frankfurt
+    plan: free
+
+services:
+  # Redis Service
+  - type: redis
+    name: chatwoot-redis
+    region: frankfurt
+    plan: free
+    maxmemoryPolicy: allkeys-lru

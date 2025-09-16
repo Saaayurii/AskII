@@ -1,0 +1,37 @@
+# Dockerfile.render
+# Оптимизированный Dockerfile для Render deployment
+
+# Используем официальный образ Chatwoot
+FROM chatwoot/chatwoot:latest
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Переменные окружения для Render
+ENV RAILS_ENV=production
+ENV PORT=3000
+ENV RAILS_SERVE_STATIC_FILES=true
+ENV RAILS_LOG_TO_STDOUT=true
+ENV BUNDLE_SILENCE_ROOT_WARNING=1
+
+# Копируем текущий код (если есть локальные изменения)
+COPY --chown=chatwoot:chatwoot . /app/
+
+# Создаем необходимые директории
+RUN mkdir -p /app/log /app/tmp/pids /app/tmp/cache
+
+# Устанавливаем права доступа
+RUN chown -R chatwoot:chatwoot /app
+
+# Переключаемся на пользователя chatwoot для безопасности
+USER chatwoot
+
+# Проверка здоровья приложения
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/api/v1/accounts || exit 1
+
+# Экспозим порт
+EXPOSE 3000
+
+# Команда запуска с подготовкой базы данных
+CMD ["sh", "-c", "bundle exec rails db:chatwoot_prepare && bundle exec rails server -b 0.0.0.0 -p 3000"]
