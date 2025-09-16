@@ -1,0 +1,35 @@
+# Dockerfile.railway
+# Оптимизированный Dockerfile для Railway deployment
+
+FROM chatwoot/chatwoot:latest
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем только необходимое для production
+COPY --chown=chatwoot:chatwoot . /app/
+
+# Переменные окружения для Railway
+ENV RAILS_ENV=production
+ENV PORT=3000
+ENV RAILS_SERVE_STATIC_FILES=true
+ENV RAILS_LOG_TO_STDOUT=true
+
+# Создаем директории для логов и tmp
+RUN mkdir -p /app/log /app/tmp/pids
+
+# Устанавливаем права доступа
+RUN chown -R chatwoot:chatwoot /app
+
+# Переключаемся на пользователя chatwoot
+USER chatwoot
+
+# Проверка здоровья приложения
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/api/v1/accounts || exit 1
+
+# Экспозим порт
+EXPOSE 3000
+
+# Команда запуска с оптимизацией для Railway
+CMD ["sh", "-c", "bundle exec rails db:chatwoot_prepare && bundle exec rails server -b 0.0.0.0 -p 3000"]
