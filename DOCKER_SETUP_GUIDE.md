@@ -216,6 +216,135 @@ docker compose down -v
 docker compose ps
 ```
 
+## Настройка AI (Qwen2.5:14b через Ollama)
+
+### 1. Добавление Ollama в docker-compose.yaml
+Ollama уже включен в docker-compose.yaml:
+```yaml
+ollama:
+  image: ollama/ollama:latest
+  ports:
+    - "11434:11434"
+  volumes:
+    - ollama_data:/root/.ollama
+  environment:
+    - OLLAMA_HOST=0.0.0.0:11434
+  restart: unless-stopped
+```
+
+### 2. Установка модели Qwen2.5:14b
+```bash
+# Скачать модель Qwen2.5:14b (9.0 GB)
+docker exec chatwoot-ollama-1 ollama pull qwen2.5:14b
+
+# Проверить установленные модели
+docker exec chatwoot-ollama-1 ollama list
+```
+
+### 3. Настройка AI конфигурации
+```bash
+# Запустить скрипт настройки
+docker-compose exec rails bundle exec rails runner setup_ai_config.rb
+```
+
+Этот скрипт создаст следующие настройки:
+- `CAPTAIN_OPEN_AI_API_KEY`: `ollama-local-key`
+- `CAPTAIN_OPEN_AI_ENDPOINT`: `http://ollama:11434`
+- `CAPTAIN_OPEN_AI_MODEL`: `qwen2.5:14b`
+
+### 4. Настройка OpenAI интеграции в админке
+1. Перейдите в **Settings** → **Integrations** → **OpenAI**
+2. Введите API Key: `ollama-local-key`
+3. Включите **Show label suggestions** (опционально)
+4. Сохраните настройки
+
+### 5. Переменные окружения в docker-compose.yaml
+Убедитесь что в `docker-compose.yaml` установлены правильные переменные:
+```yaml
+environment:
+  - OPENAI_API_KEY=ollama
+  - OPENAI_API_BASE=http://ollama:11434
+  - OPENAI_GPT_MODEL=qwen2.5:14b
+```
+
+### 6. Перезапуск для применения изменений
+```bash
+# Перезапустить все контейнеры
+docker-compose down && docker-compose up -d
+
+# Или только Rails сервисы
+docker-compose restart rails sidekiq
+```
+
+### 7. Тестирование AI функций
+В любом разговоре попробуйте:
+- **Expand** - развернуть ответ
+- **Summarize** - создать краткое изложение
+- **Rephrase** - переформулировать
+- **Fix spelling** - исправить грамматику
+- **Make friendly/formal** - изменить тон
+
+### 8. Создание кастомной модели (опционально)
+Для лучшей работы на русском языке можно создать кастомную модель:
+
+1. Создайте файл `qwen-russian.modelfile`:
+```
+# Qwen настроенный для русского языка
+FROM qwen2.5:14b
+
+# Системный промпт для лучшей работы на русском
+SYSTEM """Ты - опытный помощник службы поддержки, который отвечает клиентам на русском языке.
+
+Твои основные принципы:
+- Всегда отвечай на русском языке
+- Будь вежливым и профессиональным
+- Давай краткие, но полные ответы
+- Используй простой и понятный язык
+- Проявляй эмпатию к проблемам клиентов
+"""
+
+# Параметры для лучшей генерации
+PARAMETER temperature 0.7
+PARAMETER top_p 0.9
+PARAMETER top_k 40
+```
+
+2. Создайте модель:
+```bash
+# Скопировать файл в контейнер
+docker cp qwen-russian.modelfile chatwoot-ollama-1:/tmp/
+
+# Создать кастомную модель
+docker exec chatwoot-ollama-1 ollama create qwen-russian -f /tmp/qwen-russian.modelfile
+
+# Обновить конфигурацию на новую модель
+# В setup_ai_config.rb замените 'qwen2.5:14b' на 'qwen-russian'
+```
+
+### Устранение неполадок AI
+
+**Ошибка: "model not found"**
+```bash
+# Проверить доступные модели
+docker exec chatwoot-ollama-1 ollama list
+
+# Перезапустить Ollama
+docker-compose restart ollama
+```
+
+**Ошибка: "Net::ReadTimeout"**
+- Таймаут уже увеличен до 120 секунд
+- Модель Qwen2.5:14b требует времени для генерации
+
+**Ошибка: "connection refused"**
+```bash
+# Проверить что Ollama запущен
+docker-compose ps ollama
+
+# Проверить логи Ollama
+docker-compose logs ollama
+```
+
 ## Логин по умолчанию
 - Email: admin@example.com
 - Password: Password123!

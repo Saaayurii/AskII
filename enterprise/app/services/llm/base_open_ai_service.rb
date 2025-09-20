@@ -1,5 +1,5 @@
 class Llm::BaseOpenAiService
-  DEFAULT_MODEL = 'gpt-4o-mini'.freeze
+  DEFAULT_MODEL = 'qwen2.5:14b'.freeze
 
   def initialize
     @client = OpenAI::Client.new(
@@ -16,7 +16,7 @@ class Llm::BaseOpenAiService
 
   def uri_base
     endpoint = InstallationConfig.find_by(name: 'CAPTAIN_OPEN_AI_ENDPOINT')&.value
-    endpoint.presence || 'https://api.openai.com/'
+    endpoint.presence || ENV.fetch('OPENAI_API_BASE', 'http://ollama:11434')
   end
 
   def setup_model
