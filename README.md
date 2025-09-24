@@ -1,140 +1,639 @@
-<img src="./.github/screenshots/header.png#gh-light-mode-only" width="100%" alt="Header light mode"/>
-<img src="./.github/screenshots/header-dark.png#gh-dark-mode-only" width="100%" alt="Header dark mode"/>
+# СпросиИИ (AskII) 🤖💬
 
-___
-
-# Chatwoot
-
-The modern customer support platform, an open-source alternative to Intercom, Zendesk, Salesforce Service Cloud etc.
-
-<p>
-  <a href="https://codeclimate.com/github/chatwoot/chatwoot/maintainability"><img src="https://api.codeclimate.com/v1/badges/e6e3f66332c91e5a4c0c/maintainability" alt="Maintainability"></a>
-  <img src="https://img.shields.io/circleci/build/github/chatwoot/chatwoot" alt="CircleCI Badge">
-    <a href="https://hub.docker.com/r/chatwoot/chatwoot/"><img src="https://img.shields.io/docker/pulls/chatwoot/chatwoot" alt="Docker Pull Badge"></a>
-  <a href="https://hub.docker.com/r/chatwoot/chatwoot/"><img src="https://img.shields.io/docker/cloud/build/chatwoot/chatwoot" alt="Docker Build Badge"></a>
-  <img src="https://img.shields.io/github/commit-activity/m/chatwoot/chatwoot" alt="Commits-per-month">
-  <a title="Crowdin" target="_self" href="https://chatwoot.crowdin.com/chatwoot"><img src="https://badges.crowdin.net/e/37ced7eba411064bd792feb3b7a28b16/localized.svg"></a>
-  <a href="https://discord.gg/cJXdrwS"><img src="https://img.shields.io/discord/647412545203994635" alt="Discord"></a>
-  <a href="https://status.chatwoot.com"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fchatwoot%2Fstatus%2Fmaster%2Fapi%2Fchatwoot%2Fuptime.json" alt="uptime"></a>
-  <a href="https://status.chatwoot.com"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fchatwoot%2Fstatus%2Fmaster%2Fapi%2Fchatwoot%2Fresponse-time.json" alt="response time"></a>
-  <a href="https://artifacthub.io/packages/helm/chatwoot/chatwoot"><img src="https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/artifact-hub" alt="Artifact HUB"></a>
-</p>
-
-
-<p>
-  <a href="https://heroku.com/deploy?template=https://github.com/chatwoot/chatwoot/tree/master" alt="Deploy to Heroku">
-     <img width="150" alt="Deploy" src="https://www.herokucdn.com/deploy/button.svg"/>
-  </a>
-  <a href="https://marketplace.digitalocean.com/apps/chatwoot?refcode=f2238426a2a8" alt="Deploy to DigitalOcean">
-     <img width="200" alt="Deploy to DO" src="https://www.deploytodo.com/do-btn-blue.svg"/>
-  </a>
-</p>
-
-<img src="./.github/screenshots/dashboard.png#gh-light-mode-only" width="100%" alt="Chat dashboard dark mode"/>
-<img src="./.github/screenshots/dashboard-dark.png#gh-dark-mode-only" width="100%" alt="Chat dashboard"/>
+<img src="./.github/screenshots/header.png#gh-light-mode-only" width="100%" alt="СпросиИИ - светлая тема"/>
+<img src="./.github/screenshots/header-dark.png#gh-dark-mode-only" width="100%" alt="СпросиИИ - тёмная тема"/>
 
 ---
 
-Chatwoot is the modern, open-source, and self-hosted customer support platform designed to help businesses deliver exceptional customer support experience. Built for scale and flexibility, Chatwoot gives you full control over your customer data while providing powerful tools to manage conversations across channels.
+**СпросиИИ** — это современная платформа поддержки клиентов с интеграцией локального искусственного интеллекта, основанная на Chatwoot. Проект представляет собой open-source альтернативу Intercom, Zendesk и Salesforce Service Cloud с встроенной поддержкой локальных ИИ моделей через Ollama.
 
-### ✨ Captain – AI Agent for Support
+<p>
+  <img src="https://img.shields.io/badge/Ruby-3.2+-red?style=flat&logo=ruby" alt="Ruby Version">
+  <img src="https://img.shields.io/badge/Node.js-23.x-green?style=flat&logo=node.js" alt="Node.js Version">
+  <img src="https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=flat&logo=vue.js" alt="Vue.js Version">
+  <img src="https://img.shields.io/badge/PostgreSQL-16+-336791?style=flat&logo=postgresql" alt="PostgreSQL Version">
+  <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=flat&logo=docker" alt="Docker Ready">
+  <img src="https://img.shields.io/badge/AI-Qwen2.5-FF6B35?style=flat" alt="AI Support">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
+</p>
 
-Supercharge your support with Captain, Chatwoot’s AI agent. Captain helps automate responses, handle common queries, and reduce agent workload—ensuring customers get instant, accurate answers. With Captain, your team can focus on complex conversations while routine questions are resolved automatically. Read more about Captain [here](https://chwt.app/captain-docs).
+<img src="./.github/screenshots/dashboard.png#gh-light-mode-only" width="100%" alt="Панель управления СпросиИИ"/>
+<img src="./.github/screenshots/dashboard-dark.png#gh-dark-mode-only" width="100%" alt="Панель управления СпросиИИ - тёмная тема"/>
 
-### 💬 Omnichannel Support Desk
+---
 
-Chatwoot centralizes all customer conversations into one powerful inbox, no matter where your customers reach out from. It supports live chat on your website, email, Facebook, Instagram, Twitter, WhatsApp, Telegram, Line, SMS etc.
+## 🎯 Основные возможности
 
-### 📚 Help center portal
+### 🤖 Локальный ИИ Помощник (Captain)
+СпросиИИ интегрирует локальную ИИ модель **Qwen2.5:14b** через Ollama для:
+- **Автоматических ответов** на частые вопросы клиентов
+- **Резюмирования** длинных разговоров
+- **Перефразирования** и улучшения текста
+- **Исправления грамматики** и орфографии
+- **Изменения тона** сообщений (дружелюбный/формальный)
+- **Генерации предложений** меток для категоризации
 
-Publish help articles, FAQs, and guides through the built-in Help Center Portal. Enable customers to find answers on their own, reduce repetitive queries, and keep your support team focused on more complex issues.
+### 💬 Омниканальная поддержка
+Централизованный инбокс для всех каналов связи:
+- Веб-чат на сайте
+- Email
+- Facebook Messenger
+- Instagram Direct
+- Twitter DM
+- WhatsApp
+- Telegram
+- LINE
+- SMS
 
-### 🗂️ Other features
+### 📚 Центр знаний
+- Публикация статей помощи и FAQ
+- Встроенный портал самообслуживания
+- Поиск по базе знаний
+- Многоязычная поддержка
 
-#### Collaboration & Productivity
+### 🗂️ Расширенные возможности
 
-- Private Notes and @mentions for internal team discussions.
-- Labels to organize and categorize conversations.
-- Keyboard Shortcuts and a Command Bar for quick navigation.
-- Canned Responses to reply faster to frequently asked questions.
-- Auto-Assignment to route conversations based on agent availability.
-- Multi-lingual Support to serve customers in multiple languages.
-- Custom Views and Filters for better inbox organization.
-- Business Hours and Auto-Responders to manage response expectations.
-- Teams and Automation tools for scaling support workflows.
-- Agent Capacity Management to balance workload across the team.
+#### Совместная работа и продуктивность
+- **Приватные заметки** и @упоминания для внутреннего общения
+- **Метки** для организации и категоризации разговоров
+- **Горячие клавиши** и командная строка для быстрой навигации
+- **Заготовленные ответы** для часто задаваемых вопросов
+- **Автоназначение** разговоров на основе доступности агентов
+- **Многоязычная поддержка** для обслуживания клиентов
+- **Пользовательские представления** и фильтры
+- **Рабочие часы** и автоответчики
+- **Команды** и инструменты автоматизации
+- **Управление нагрузкой** агентов
 
-#### Customer Data & Segmentation
-- Contact Management with profiles and interaction history.
-- Contact Segments and Notes for targeted communication.
-- Campaigns to proactively engage customers.
-- Custom Attributes for storing additional customer data.
-- Pre-Chat Forms to collect user information before starting conversations.
+#### Данные клиентов и сегментация
+- **Управление контактами** с профилями и историей взаимодействий
+- **Сегменты контактов** и заметки для таргетированного общения
+- **Кампании** для проактивного взаимодействия с клиентами
+- **Пользовательские атрибуты** для хранения дополнительных данных
+- **Предварительные формы** для сбора информации
 
-#### Integrations
-- Slack Integration to manage conversations directly from Slack.
-- Dialogflow Integration for chatbot automation.
-- Dashboard Apps to embed internal tools within Chatwoot.
-- Shopify Integration to view and manage customer orders right within Chatwoot.
-- Use Google Translate to translate messages from your customers in realtime.
-- Create and manage Linear tickets within Chatwoot.
+#### Интеграции
+- **Slack** интеграция для управления разговорами
+- **Dialogflow** интеграция для чат-ботов
+- **Приложения панели** для встраивания внутренних инструментов
+- **Shopify** интеграция для управления заказами клиентов
+- **Google Translate** для перевода сообщений в реальном времени
+- **Linear** для создания и управления тикетами
 
-#### Reports & Insights
-- Live View of ongoing conversations for real-time monitoring.
-- Conversation, Agent, Inbox, Label, and Team Reports for operational visibility.
-- CSAT Reports to measure customer satisfaction.
-- Downloadable Reports for offline analysis and reporting.
+#### Отчёты и аналитика
+- **Живой просмотр** текущих разговоров
+- **Отчёты** по разговорам, агентам, инбоксам, меткам и командам
+- **CSAT отчёты** для измерения удовлетворённости клиентов
+- **Загружаемые отчёты** для офлайн анализа
 
+---
 
-## Documentation
+## 🛠️ Технологический стек
 
-Detailed documentation is available at [chatwoot.com/help-center](https://www.chatwoot.com/help-center).
+### Backend
+- **Ruby on Rails 7.x** - основной фреймворк
+- **PostgreSQL 16** с расширением pgvector для векторного поиска
+- **Redis** для кэширования и очередей
+- **Sidekiq** для фоновых задач
 
-## Translation process
+### Frontend
+- **Vue.js 3** с Composition API
+- **Tailwind CSS** для стилизации
+- **Vite** для сборки и разработки
+- **TypeScript** для типизации
 
-The translation process for Chatwoot web and mobile app is managed at [https://translate.chatwoot.com](https://translate.chatwoot.com) using Crowdin. Please read the [translation guide](https://www.chatwoot.com/docs/contributing/translating-chatwoot-to-your-language) for contributing to Chatwoot.
+### ИИ и ML
+- **Ollama** для локального размещения ИИ моделей
+- **Qwen2.5:14b** - основная языковая модель
+- **pgvector** для векторного поиска и эмбеддингов
 
-## Branching model
+### Инфраструктура
+- **Docker** и Docker Compose для контейнеризации
+- **Nginx** для reverse proxy (в продакшене)
+- **MailHog** для тестирования email в разработке
 
-We use the [git-flow](https://nvie.com/posts/a-successful-git-branching-model/) branching model. The base branch is `develop`.
-If you are looking for a stable version, please use the `master` or tags labelled as `v1.x.x`.
+---
 
-## Deployment
+## 🚀 Быстрый старт
 
-### Heroku one-click deploy
+### Системные требования
+- Docker и Docker Compose
+- 8GB+ RAM (для ИИ модели)
+- 50GB+ свободного места на диске
 
-Deploying Chatwoot to Heroku is a breeze. It's as simple as clicking this button:
+### 1. Клонирование репозитория
+```bash
+git clone https://github.com/your-username/AskII.git
+cd AskII
+```
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/chatwoot/chatwoot/tree/master)
+### 2. Настройка окружения
+```bash
+# Копирование файла окружения
+cp .env.example .env
 
-Follow this [link](https://www.chatwoot.com/docs/environment-variables) to understand setting the correct environment variables for the app to work with all the features. There might be breakages if you do not set the relevant environment variables.
+# Редактирование .env файла
+nano .env
+```
 
+Базовые настройки в `.env`:
+```env
+SECRET_KEY_BASE=your-secret-key-here
+FRONTEND_URL=http://localhost:3000
+POSTGRES_PASSWORD=chatwoot_password
+REDIS_PASSWORD=redis_password
+ENABLE_ACCOUNT_SIGNUP=false
+```
 
-### DigitalOcean 1-Click Kubernetes deployment
+### 3. Запуск через Docker
+```bash
+# Сборка образов
+docker compose build
 
-Chatwoot now supports 1-Click deployment to DigitalOcean as a kubernetes app.
+# Запуск всех сервисов
+docker compose up -d
 
-<a href="https://marketplace.digitalocean.com/apps/chatwoot?refcode=f2238426a2a8" alt="Deploy to DigitalOcean">
-  <img width="200" alt="Deploy to DO" src="https://www.deploytodo.com/do-btn-blue.svg"/>
-</a>
+# Создание и настройка базы данных
+docker compose exec rails bundle exec rails db:create db:schema:load db:seed
 
-### Other deployment options
+# Сборка фронтенд ресурсов
+docker compose exec rails bundle exec rails assets:precompile
+```
 
-For other supported options, checkout our [deployment page](https://chatwoot.com/deploy).
+### 4. Настройка ИИ модели
+```bash
+# Загрузка модели Qwen2.5:14b (потребует времени)
+docker exec askii-ollama-1 ollama pull qwen2.5:14b
 
-## Security
+# Настройка ИИ конфигурации
+docker compose exec rails bundle exec rails runner setup_ai_config.rb
+```
 
-Looking to report a vulnerability? Please refer our [SECURITY.md](./SECURITY.md) file.
+### 5. Создание администратора
+```bash
+# Вход в Rails консоль
+docker compose exec rails bundle exec rails console
 
-## Community
+# Создание аккаунта и администратора
+account = Account.create!(name: 'Моя Компания')
+user = User.create!(
+  name: 'Администратор',
+  email: 'admin@example.com',
+  password: 'Password123!',
+  password_confirmation: 'Password123!'
+)
+AccountUser.create!(account: account, user: user, role: 'administrator')
+user.confirm
 
-If you need help or just want to hang out, come, say hi on our [Discord](https://discord.gg/cJXdrwS) server.
+exit
+```
 
-## Contributors
+### 6. Доступ к приложению
+- **СпросиИИ**: http://localhost:3000
+- **MailHog** (тест email): http://localhost:8025
+- **Ollama API**: http://localhost:11434
 
-Thanks goes to all these [wonderful people](https://www.chatwoot.com/docs/contributors):
+---
 
-<a href="https://github.com/chatwoot/chatwoot/graphs/contributors"><img src="https://opencollective.com/chatwoot/contributors.svg?width=890&button=false" /></a>
+## 🗄️ База данных
 
+### Структура БД
+СпросиИИ использует PostgreSQL 16 с расширением pgvector для векторного поиска:
 
-*Chatwoot* &copy; 2017-2025, Chatwoot Inc - Released under the MIT License.
+```sql
+-- Основные таблицы
+accounts           -- Аккаунты организаций
+users              -- Пользователи системы
+conversations      -- Разговоры с клиентами
+messages           -- Сообщения в разговорах
+contacts           -- Контакты клиентов
+inboxes            -- Каналы связи
+agents             -- Агенты поддержки
+
+-- ИИ и ML таблицы
+ai_responses       -- Ответы ИИ помощника
+embeddings         -- Векторные представления для поиска
+```
+
+### Настройка подключения
+```yaml
+# config/database.yml
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV.fetch('POSTGRES_HOST', 'localhost') %>
+  port: <%= ENV.fetch('POSTGRES_PORT', '5432') %>
+  pool: <%= ENV.fetch('RAILS_MAX_THREADS', 5) %>
+
+development:
+  <<: *default
+  database: <%= ENV.fetch('POSTGRES_DATABASE', 'chatwoot_dev') %>
+  username: <%= ENV.fetch('POSTGRES_USERNAME', 'postgres') %>
+  password: <%= ENV.fetch('POSTGRES_PASSWORD', '') %>
+```
+
+### Миграции и управление
+```bash
+# Создание базы данных
+docker compose exec rails bundle exec rails db:create
+
+# Применение миграций
+docker compose exec rails bundle exec rails db:migrate
+
+# Откат миграций
+docker compose exec rails bundle exec rails db:rollback
+
+# Сброс БД с загрузкой тестовых данных
+docker compose exec rails bundle exec rails db:reset db:seed
+```
+
+---
+
+## 🐳 Docker конфигурация
+
+### Архитектура сервисов
+
+```yaml
+# docker-compose.yaml
+services:
+  rails:        # Основное Rails приложение
+  sidekiq:      # Фоновые задачи
+  vite:         # Сборка фронтенда
+  postgres:     # База данных PostgreSQL 16
+  redis:        # Кэш и очереди
+  mailhog:      # Тестирование email
+  ollama:       # Локальная ИИ модель
+```
+
+### Полезные команды Docker
+
+```bash
+# Просмотр статуса всех контейнеров
+docker compose ps
+
+# Просмотр логов конкретного сервиса
+docker compose logs rails -f
+
+# Перезапуск сервисов
+docker compose restart rails sidekiq
+
+# Вход в контейнер Rails
+docker compose exec rails bash
+
+# Полная пересборка
+docker compose down -v && docker compose build --no-cache && docker compose up -d
+
+# Очистка неиспользуемых ресурсов Docker
+docker system prune -a
+```
+
+### Volumes и хранение данных
+- `postgres:/var/lib/postgresql/data` - данные PostgreSQL
+- `redis:/data/redis` - данные Redis
+- `ollama_data:/root/.ollama` - модели и данные Ollama
+- `./storage:/app/storage` - файлы и изображения
+- `bundle:/usr/local/bundle` - gem-файлы Ruby
+
+---
+
+## 🤖 Интеграция локального ИИ
+
+### Ollama + Qwen2.5:14b
+
+СпросиИИ использует **Ollama** для локального размещения ИИ модели **Qwen2.5:14b**, что обеспечивает:
+- 🔒 **Полную конфиденциальность** данных
+- ⚡ **Быстрые ответы** без интернета
+- 💰 **Нулевые затраты** на API
+- 🎯 **Настройку под специфику** проекта
+
+### Настройка ИИ
+
+#### 1. Установка модели
+```bash
+# Qwen2.5:3b (быстрая, 1.9GB) - для слабых машин
+docker exec askii-ollama-1 ollama pull qwen2.5:3b
+
+# Qwen2.5:14b (мощная, 8.5GB) - рекомендуется
+docker exec askii-ollama-1 ollama pull qwen2.5:14b
+
+# Проверка установленных моделей
+docker exec askii-ollama-1 ollama list
+```
+
+#### 2. Конфигурация в Rails
+```ruby
+# config/initializers/ai_agents.rb автоматически настраивается через:
+CAPTAIN_OPEN_AI_API_KEY=ollama-local-key
+CAPTAIN_OPEN_AI_ENDPOINT=http://ollama:11434
+CAPTAIN_OPEN_AI_MODEL=qwen2.5:14b
+```
+
+#### 3. Создание кастомной модели для русского языка
+```bash
+# Создание Modelfile
+cat > qwen-russian.modelfile << 'EOF'
+FROM qwen2.5:14b
+
+SYSTEM """Ты - опытный помощник службы поддержки, который отвечает клиентам на русском языке.
+
+Принципы работы:
+- Всегда отвечай на русском языке
+- Будь вежливым и профессиональным
+- Давай краткие, но исчерпывающие ответы
+- Используй простой и понятный язык
+- Проявляй эмпатию к проблемам клиентов
+"""
+
+PARAMETER temperature 0.7
+PARAMETER top_p 0.9
+PARAMETER top_k 40
+EOF
+
+# Загрузка в контейнер и создание модели
+docker cp qwen-russian.modelfile askii-ollama-1:/tmp/
+docker exec askii-ollama-1 ollama create qwen-russian -f /tmp/qwen-russian.modelfile
+```
+
+### ИИ возможности в интерфейе
+
+После настройки доступны следующие функции:
+- **Expand** - развернуть краткий ответ
+- **Summarize** - создать резюме разговора
+- **Rephrase** - переформулировать сообщение
+- **Fix spelling** - исправить грамматические ошибки
+- **Make friendly** - сделать тон более дружелюбным
+- **Make formal** - сделать тон более официальным
+- **Label suggestions** - предложения меток для категоризации
+
+### Мониторинг ИИ
+
+```bash
+# Статус Ollama
+curl http://localhost:11434/api/tags
+
+# Логи Ollama
+docker compose logs ollama -f
+
+# Использование ресурсов
+docker stats askii-ollama-1
+```
+
+---
+
+## ⚙️ Разработка
+
+### Локальная разработка (без Docker)
+
+#### Требования
+- Ruby 3.2+
+- Node.js 23.x
+- PostgreSQL 16+
+- Redis 7+
+- pnpm 10.x
+
+#### Настройка
+```bash
+# Установка зависимостей
+bundle install
+pnpm install
+
+# Настройка БД
+cp .env.example .env
+rails db:create db:migrate db:seed
+
+# Запуск в режиме разработки
+pnpm dev
+# или
+overmind start -f Procfile.dev
+```
+
+### Стандарты кода
+
+#### Ruby/Rails
+```bash
+# Линтинг Ruby кода
+bundle exec rubocop -a
+
+# Запуск тестов
+bundle exec rspec spec/path/to/file_spec.rb
+
+# Одиночный тест
+bundle exec rspec spec/path/to/file_spec.rb:LINE_NUMBER
+```
+
+#### Vue.js/JavaScript
+```bash
+# Линтинг JS/Vue кода
+pnpm eslint
+
+# Автоисправление
+pnpm eslint:fix
+
+# Запуск тестов
+pnpm test
+
+# Тесты в режиме наблюдения
+pnpm test:watch
+```
+
+### Соглашения
+
+#### Стиль кода
+- **Ruby**: RuboCop правила, максимум 150 символов в строке
+- **Vue/JS**: ESLint (Airbnb base + Vue 3 recommended)
+- **Vue компоненты**: PascalCase
+- **События**: camelCase
+- **I18n**: Без строк в шаблонах, только через i18n
+- **Стили**: Только Tailwind CSS, никаких пользовательских CSS
+
+#### Архитектура
+- **Vue API**: Только Composition API с `<script setup>`
+- **Обработка ошибок**: Кастомные исключения в `lib/custom_exceptions/`
+- **Модели**: Валидация presence/uniqueness, правильные индексы
+- **Типизация**: PropTypes в Vue, strong params в Rails
+
+---
+
+## 🌐 Развёртывание
+
+### Продакшн через Docker
+
+#### 1. Настройка окружения
+```bash
+# Продакшн переменные
+cp .env.example .env.production
+
+# Редактирование для продакшна
+RAILS_ENV=production
+SECRET_KEY_BASE=your-production-secret
+FRONTEND_URL=https://yourdomain.com
+```
+
+#### 2. Развёртывание
+```bash
+# Использование продакшн compose файла
+docker compose -f docker-compose.production.yaml up -d
+
+# Настройка БД для продакшна
+docker compose exec rails bundle exec rails db:create db:migrate db:seed RAILS_ENV=production
+
+# Сборка продакшн ассетов
+docker compose exec rails bundle exec rails assets:precompile RAILS_ENV=production
+```
+
+### Готовые платформы
+
+#### Railway
+```bash
+# Развёртывание одной кнопкой
+railway login
+railway init
+railway up
+```
+
+#### Render
+- Используйте `Dockerfile.render`
+- Настройте переменные окружения через панель Render
+- Подключите PostgreSQL и Redis сервисы
+
+#### DigitalOcean App Platform
+- Подключите GitHub репозиторий
+- Используйте автоопределение фреймворка
+- Настройте базы данных как managed сервисы
+
+---
+
+## 📊 Мониторинг и логирование
+
+### Системные метрики
+```bash
+# Использование ресурсов контейнеров
+docker stats
+
+# Использование дискового пространства
+docker system df
+
+# Логи всех сервисов
+docker compose logs -f
+```
+
+### Метрики приложения
+- **Rails logs**: `docker compose logs rails -f`
+- **Sidekiq jobs**: Веб-интерфейс на `/sidekiq`
+- **PostgreSQL**: Запросы и производительность
+- **Redis**: Использование памяти и соединения
+- **Ollama**: Использование GPU/CPU для ИИ
+
+---
+
+## 🔧 Устранение неполадок
+
+### Частые проблемы
+
+#### 1. Ошибки Docker прав доступа
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+#### 2. Ошибки миграций БД
+```bash
+# Полный сброс
+docker compose down -v
+docker compose up -d
+docker compose exec rails bundle exec rails db:create db:schema:load db:seed
+```
+
+#### 3. Проблемы с ИИ моделью
+```bash
+# Проверка доступных моделей
+docker exec askii-ollama-1 ollama list
+
+# Перезагрузка модели
+docker exec askii-ollama-1 ollama pull qwen2.5:14b
+
+# Перезапуск Ollama
+docker compose restart ollama
+```
+
+#### 4. Ошибки сборки ассетов
+```bash
+# Очистка кэша
+docker compose exec rails bundle exec rails assets:clobber
+docker compose exec rails bundle exec rails assets:precompile
+
+# Пересборка Node модулей
+docker compose exec vite pnpm install --force
+```
+
+---
+
+## 🤝 Участие в разработке
+
+### Как внести вклад
+
+1. **Fork** репозитория
+2. Создайте **feature branch**: `git checkout -b feature/amazing-feature`
+3. **Commit** изменения: `git commit -m 'Add amazing feature'`
+4. **Push** в branch: `git push origin feature/amazing-feature`
+5. Откройте **Pull Request**
+
+### Стандарты Pull Request
+- Описание изменений на русском языке
+- Тесты для новой функциональности
+- Соблюдение стандартов кода
+- Обновление документации при необходимости
+
+### Локализация
+- Переводы управляются через [Crowdin](https://translate.chatwoot.com)
+- Обновляйте только `config/locales/en.yml` и `app/javascript/dashboard/i18n/locale/en.json`
+- Другие языки обновляются сообществом
+
+---
+
+## 📄 Лицензия
+
+Этот проект распространяется под лицензией [MIT License](./LICENSE).
+
+```
+MIT License
+
+Copyright (c) 2025 Роман Долженко
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+---
+
+## 👨‍💻 Автор
+
+**Долженко Роман**
+📍 Донецк, Россия
+🌐 [Портфолио](https://portfolio-roman.vercel.app/)
+📧 Связь через GitHub Issues
+
+---
+
+<div align="center">
+
+**СпросиИИ** — делаем поддержку клиентов умнее с локальным ИИ 🚀
+
+[🌟 Поставить звезду](https://github.com/your-username/AskII) • [🐛 Сообщить об ошибке](https://github.com/your-username/AskII/issues) • [💡 Предложить улучшение](https://github.com/your-username/AskII/issues)
+
+</div>
