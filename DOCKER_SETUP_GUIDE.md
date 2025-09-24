@@ -127,7 +127,6 @@ account = Account.create!(name: 'My Company')
 user = User.create!(name: 'Admin User', email: 'admin@example.com', password: 'Password123!', password_confirmation: 'Password123!')
 AccountUser.create!(account: account, user: user, role: 'administrator')
 
-# Подтверждение пользователя
 user.confirm
 exit
 ```
@@ -232,10 +231,10 @@ ollama:
   restart: unless-stopped
 ```
 
-### 2. Установка модели Qwen2.5:14b
+### 2. Установка модели Qwen2.5:3b
 ```bash
-# Скачать модель Qwen2.5:14b (9.0 GB)
-docker exec chatwoot-ollama-1 ollama pull qwen2.5:14b
+# Скачать модель Qwen2.5:3b (1.9 GB)
+docker exec chatwoot-ollama-1 ollama pull qwen2.5:3b
 
 # Проверить установленные модели
 docker exec chatwoot-ollama-1 ollama list
@@ -250,7 +249,7 @@ docker-compose exec rails bundle exec rails runner setup_ai_config.rb
 Этот скрипт создаст следующие настройки:
 - `CAPTAIN_OPEN_AI_API_KEY`: `ollama-local-key`
 - `CAPTAIN_OPEN_AI_ENDPOINT`: `http://ollama:11434`
-- `CAPTAIN_OPEN_AI_MODEL`: `qwen2.5:14b`
+- `CAPTAIN_OPEN_AI_MODEL`: `qwen2.5:3b`
 
 ### 4. Настройка OpenAI интеграции в админке
 1. Перейдите в **Settings** → **Integrations** → **OpenAI**
@@ -264,7 +263,7 @@ docker-compose exec rails bundle exec rails runner setup_ai_config.rb
 environment:
   - OPENAI_API_KEY=ollama
   - OPENAI_API_BASE=http://ollama:11434
-  - OPENAI_GPT_MODEL=qwen2.5:14b
+  - OPENAI_GPT_MODEL=qwen2.5:3b
 ```
 
 ### 6. Перезапуск для применения изменений
@@ -290,7 +289,7 @@ docker-compose restart rails sidekiq
 1. Создайте файл `qwen-russian.modelfile`:
 ```
 # Qwen настроенный для русского языка
-FROM qwen2.5:14b
+FROM qwen2.5:3b
 
 # Системный промпт для лучшей работы на русском
 SYSTEM """Ты - опытный помощник службы поддержки, который отвечает клиентам на русском языке.
@@ -318,7 +317,7 @@ docker cp qwen-russian.modelfile chatwoot-ollama-1:/tmp/
 docker exec chatwoot-ollama-1 ollama create qwen-russian -f /tmp/qwen-russian.modelfile
 
 # Обновить конфигурацию на новую модель
-# В setup_ai_config.rb замените 'qwen2.5:14b' на 'qwen-russian'
+# В setup_ai_config.rb замените 'qwen2.5:3b' на 'qwen-russian'
 ```
 
 ### Устранение неполадок AI
@@ -334,7 +333,7 @@ docker-compose restart ollama
 
 **Ошибка: "Net::ReadTimeout"**
 - Таймаут уже увеличен до 120 секунд
-- Модель Qwen2.5:14b требует времени для генерации
+- Модель Qwen2.5:3b быстрая, но может требовать времени для первого запуска
 
 **Ошибка: "connection refused"**
 ```bash
@@ -345,6 +344,103 @@ docker-compose ps ollama
 docker-compose logs ollama
 ```
 
+## Настройка локального хранения файлов
+
+По умолчанию Chatwoot использует локальное хранение файлов и изображений на сервере.
+
+### Конфигурация файлового хранения
+
+**1. Проверьте настройки в .env файле:**
+```bash
+# Локальное хранение (по умолчанию)
+ACTIVE_STORAGE_SERVICE=local
+```
+
+**2. Доступные варианты хранения:**
+- `local` - локальные файлы на сервере (рекомендуется)
+- `amazon` - AWS S3
+- `google` - Google Cloud Storage
+- `microsoft` - Azure Storage
+- `s3_compatible` - совместимые с S3 (DigitalOcean Spaces, MinIO)
+
+### Настройка для Docker
+
+В `docker-compose.yaml` настроен volume для хранения файлов:
+```yaml
+volumes:
+  - ./storage:/app/storage  # Файлы сохраняются в папку storage проекта
+```
+
+### Доступ к файлам по сети
+
+**Проблема**: Файлы недоступны с других компьютеров по ссылкам типа:
+`localhost:3000/rails/active_storage/blobs/redirect/...`
+
+**Решения:**
+
+#### 1. Настройка общей папки (рекомендуется)
+```bash
+# Изменить владельца папки storage
+sudo chown -R $USER:$USER ./storage
+
+# Настроить права доступа
+chmod -R 755 ./storage
+
+# В docker-compose.yaml уже настроено:
+# - ./storage:/app/storage
+```
+
+#### 2. Настройка сетевого доступа
+В `.env` добавьте:
+```bash
+# Замените на IP вашего сервера
+FRONTEND_URL=http://192.168.1.100:3000
+RAILS_ENV=development
+```
+
+#### 3. Nginx для статических файлов (продакшн)
+```nginx
+location /rails/active_storage/ {
+    alias /path/to/chatwoot/storage/;
+    expires 1y;
+    add_header Cache-Control "public, immutable";
+}
+```
+
+**Проверка работы файлового хранения:**
+```bash
+# Проверить volume
+docker volume ls | grep chatwoot_storage
+
+# Проверить содержимое хранилища
+docker exec rails-1 ls -la /app/storage
+
+# Просмотр логов при загрузке файлов
+docker-compose logs rails | grep -i storage
+```
+
+### Резервное копирование файлов
+
+```bash
+# Создать бэкап файлов
+docker run --rm -v chatwoot_storage:/data -v $(pwd):/backup alpine tar czf /backup/chatwoot_files_backup.tar.gz -C /data .
+
+# Восстановить из бэкапа
+docker run --rm -v chatwoot_storage:/data -v $(pwd):/backup alpine tar xzf /backup/chatwoot_files_backup.tar.gz -C /data
+```
+
+### Ограения размера файлов
+
+Настройки в `.env`:
+```bash
+# Максимальный размер загружаемого файла (по умолчанию 40MB)
+ACTIVE_STORAGE_VARIANT_PROCESSOR=vips
+```
+
 ## Логин по умолчанию
 - Email: admin@example.com
-- Password: Password123!
+- Password:
+
+
+
+sudo systemctl stop hiddify-redis.service

@@ -23,6 +23,11 @@ echo "Database ready to accept connections."
 #install missing gems for local dev as we are using base image compiled for production
 bundle install
 
+# Run database migrations
+echo "Running database migrations..."
+bundle exec rails db:migrate
+echo "Database migrations completed."
+
 BUNDLE="bundle check"
 
 until $BUNDLE

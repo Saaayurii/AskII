@@ -1,5 +1,5 @@
 class Llm::BaseOpenAiService
-  DEFAULT_MODEL = 'qwen2.5:14b'.freeze
+  DEFAULT_MODEL = 'qwen2.5:3b'.freeze
 
   def initialize
     @client = OpenAI::Client.new(

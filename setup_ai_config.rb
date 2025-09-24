@@ -5,7 +5,7 @@ puts '=== Creating InstallationConfig records ==='
 configs = {
   'CAPTAIN_OPEN_AI_API_KEY' => 'ollama-local-key',
   'CAPTAIN_OPEN_AI_ENDPOINT' => 'http://ollama:11434',
-  'CAPTAIN_OPEN_AI_MODEL' => 'qwen2.5:14b'
+  'CAPTAIN_OPEN_AI_MODEL' => 'qwen-russian'
 }
 
 configs.each do |key, value|

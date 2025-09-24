@@ -15,18 +15,18 @@ const {
 
 export const colors = {
   woot: {
-    25: blue.blue2,
-    50: blue.blue3,
-    75: blue.blue4,
-    100: blue.blue5,
-    200: blue.blue7,
-    300: blue.blue8,
-    400: blueDark.blue11,
-    500: blueDark.blue10,
-    600: blueDark.blue9,
-    700: blueDark.blue8,
-    800: blueDark.blue6,
-    900: blueDark.blue2,
+    25: green.green2,
+    50: green.green3,
+    75: green.green4,
+    100: green.green5,
+    200: green.green7,
+    300: green.green8,
+    400: greenDark.green11,
+    500: greenDark.green10,
+    600: greenDark.green9,
+    700: greenDark.green8,
+    800: greenDark.green6,
+    900: greenDark.green2,
   },
   green: {
     50: greenDark.green12,
@@ -102,6 +102,18 @@ export const colors = {
     800: violetDark.violet6,
     900: violet.violet12,
   },
+  blue: {
+    50: green.green2,
+    100: green.green3,
+    200: green.green5,
+    300: green.green7,
+    400: green.green8,
+    500: green.green9,
+    600: green.green10,
+    700: green.green11,
+    800: greenDark.green7,
+    900: greenDark.green6,
+  },
 
   // next design system color
   n: {
@@ -135,19 +147,19 @@ export const colors = {
       12: 'rgb(var(--iris-12) / <alpha-value>)',
     },
 
-    blue: {
-      1: 'rgb(var(--blue-1) / <alpha-value>)',
-      2: 'rgb(var(--blue-2) / <alpha-value>)',
-      3: 'rgb(var(--blue-3) / <alpha-value>)',
-      4: 'rgb(var(--blue-4) / <alpha-value>)',
-      5: 'rgb(var(--blue-5) / <alpha-value>)',
-      6: 'rgb(var(--blue-6) / <alpha-value>)',
-      7: 'rgb(var(--blue-7) / <alpha-value>)',
-      8: 'rgb(var(--blue-8) / <alpha-value>)',
-      9: 'rgb(var(--blue-9) / <alpha-value>)',
-      10: 'rgb(var(--blue-10) / <alpha-value>)',
-      11: 'rgb(var(--blue-11) / <alpha-value>)',
-      12: 'rgb(var(--blue-12) / <alpha-value>)',
+    green: {
+      1: 'rgb(var(--green-1) / <alpha-value>)',
+      2: 'rgb(var(--green-2) / <alpha-value>)',
+      3: 'rgb(var(--green-3) / <alpha-value>)',
+      4: 'rgb(var(--green-4) / <alpha-value>)',
+      5: 'rgb(var(--green-5) / <alpha-value>)',
+      6: 'rgb(var(--green-6) / <alpha-value>)',
+      7: 'rgb(var(--green-7) / <alpha-value>)',
+      8: 'rgb(var(--green-8) / <alpha-value>)',
+      9: 'rgb(var(--green-9) / <alpha-value>)',
+      10: 'rgb(var(--green-10) / <alpha-value>)',
+      11: 'rgb(var(--green-11) / <alpha-value>)',
+      12: 'rgb(var(--green-12) / <alpha-value>)',
     },
 
     ruby: {
@@ -195,6 +207,21 @@ export const colors = {
       12: 'rgb(var(--teal-12) / <alpha-value>)',
     },
 
+    blue: {
+      1: 'rgb(var(--green-1) / <alpha-value>)',
+      2: 'rgb(var(--green-2) / <alpha-value>)',
+      3: 'rgb(var(--green-3) / <alpha-value>)',
+      4: 'rgb(var(--green-4) / <alpha-value>)',
+      5: 'rgb(var(--green-5) / <alpha-value>)',
+      6: 'rgb(var(--green-6) / <alpha-value>)',
+      7: 'rgb(var(--green-7) / <alpha-value>)',
+      8: 'rgb(var(--green-8) / <alpha-value>)',
+      9: 'rgb(var(--green-9) / <alpha-value>)',
+      10: 'rgb(var(--green-10) / <alpha-value>)',
+      11: 'rgb(var(--green-11) / <alpha-value>)',
+      12: 'rgb(var(--green-12) / <alpha-value>)',
+    },
+
     gray: {
       1: 'rgb(var(--gray-1) / <alpha-value>)',
       2: 'rgb(var(--gray-2) / <alpha-value>)',
@@ -211,7 +238,7 @@ export const colors = {
     },
 
     black: '#000000',
-    brand: '#2781F6',
+    brand: '#22C55E',
     background: 'rgb(var(--background-color) / <alpha-value>)',
     solid: {
       1: 'rgb(var(--solid-1) / <alpha-value>)',
@@ -219,7 +246,7 @@ export const colors = {
       3: 'rgb(var(--solid-3) / <alpha-value>)',
       active: 'rgb(var(--solid-active) / <alpha-value>)',
       amber: 'rgb(var(--solid-amber) / <alpha-value>)',
-      blue: 'rgb(var(--solid-blue) / <alpha-value>)',
+      green: 'rgb(var(--solid-green) / <alpha-value>)',
       iris: 'rgb(var(--solid-iris) / <alpha-value>)',
     },
     alpha: {
@@ -233,7 +260,7 @@ export const colors = {
     weak: 'rgb(var(--border-weak) / <alpha-value>)',
     container: 'rgba(var(--border-container))',
     strong: 'rgb(var(--border-strong) / <alpha-value>)',
-    'blue-border': 'rgba(var(--border-blue))',
-    'blue-text': 'rgba(var(--text-blue))',
+    'green-border': 'rgba(var(--border-green))',
+    'green-text': 'rgba(var(--text-green))',
   },
 };

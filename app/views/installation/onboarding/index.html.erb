@@ -1,76 +1,202 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>SuperAdmin | Chatwoot</title>
+    <title>Добро пожаловать | <%= @global_config['INSTALLATION_NAME'] || 'СпросиИИ' %></title>
     <%= vite_client_tag %>
     <%= vite_javascript_tag 'superadmin' %>
+    <style>
+      .ai-glow {
+        background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+        box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
+      }
+      .form-glow:focus {
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2), 0 0 20px rgba(34, 197, 94, 0.1);
+      }
+      .setup-card {
+        backdrop-filter: blur(15px);
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(34, 197, 94, 0.1);
+      }
+      .dark .setup-card {
+        background: rgba(30, 41, 59, 0.95);
+        border: 1px solid rgba(34, 197, 94, 0.2);
+      }
+      .floating {
+        animation: float 4s ease-in-out infinite;
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-8px); }
+      }
+      .step-indicator {
+        background: linear-gradient(90deg, #22C55E, #16A34A);
+        background-size: 200% 200%;
+        animation: gradientShift 3s ease infinite;
+      }
+      @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      .input-icon {
+        pointer-events: none;
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+      }
+      .form-input-with-icon {
+        padding-left: 2.75rem;
+      }
+    </style>
   </head>
   <body>
     <div class="h-full w-full antialiased">
-      <main class="flex flex-col bg-woot-25 min-h-screen w-full py-20 sm:px-6 lg:px-8 dark:bg-slate-900">
-        <section class="max-w-5xl mx-auto">
-          <img src="/brand-assets/logo.svg" alt="Chatwoot" class="mx-auto h-8 w-auto block dark:hidden">
-          <img src="/brand-assets/logo_dark.svg" alt="Chatwoot" class="mx-auto h-8 w-auto hidden dark:block">
-          <h2 class="mt-6 text-center text-3xl font-medium text-slate-900 dark:text-woot-50">
-            Howdy, Welcome to Chatwoot 👋
-          </h2>
+      <!-- Enhanced animated background -->
+      <div class="fixed inset-0 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-slate-900 dark:via-slate-800 dark:to-emerald-900"></div>
+      <div class="fixed inset-0 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none" stroke="rgb(34 197 94 / 0.05)"%3E%3Ccircle cx="32" cy="32" r="16"%3E%3C/circle%3E%3Cpath d="M16 32h32m-16-16v32"%3E%3C/path%3E%3C/svg%3E')] opacity-30"></div>
+
+      <main class="relative flex flex-col min-h-screen w-full py-8 sm:px-6 lg:px-8">
+        <!-- Enhanced header section -->
+        <section class="max-w-xl mx-auto text-center floating">
+          <div class="mb-8">
+            <img src="/brand-assets/logo.svg" alt="СпросиИИ" class="mx-auto h-16 w-auto block dark:hidden">
+            <img src="/brand-assets/logo_dark.svg" alt="СпросиИИ" class="mx-auto h-16 w-auto hidden dark:block">
+          </div>
+          <div class="space-y-4">
+            <div class="step-indicator w-24 h-2 rounded-full mx-auto"></div>
+            <h1 class="text-5xl font-bold text-slate-900 dark:text-white">
+              Добро пожаловать в СпросиИИ! 🎉
+            </h1>
+            <p class="text-xl text-slate-600 dark:text-slate-300 max-w-lg mx-auto">
+              Давайте настроим вашу AI-powered систему поддержки за несколько шагов
+            </p>
+            <div class="flex justify-center space-x-2 mt-4">
+              <div class="w-3 h-3 rounded-full ai-glow"></div>
+              <div class="w-3 h-3 rounded-full bg-slate-300 dark:bg-slate-600"></div>
+              <div class="w-3 h-3 rounded-full bg-slate-300 dark:bg-slate-600"></div>
+            </div>
+          </div>
         </section>
-        <section class="bg-white shadow sm:mx-auto mt-11 sm:w-full sm:max-w-lg dark:bg-slate-800 p-11 sm:shadow-lg sm:rounded-lg mb-8 mt-15">
-          <div>
+
+        <!-- Enhanced setup form -->
+        <section class="mt-8 sm:mx-auto sm:w-full sm:max-w-xl">
+          <div class="setup-card p-10 sm:rounded-3xl sm:shadow-2xl">
             <%= form_tag('/installation/onboarding') do %>
-            <div class="space-y-5">
               <% if flash[:error].present? %>
-                <div class="rounded-md bg-red-500 p-4 text-white text-sm mb-5"><%= flash[:error] %></div>
+                <div class="rounded-xl bg-red-500 p-5 text-white text-sm mb-8 border-l-4 border-red-600">
+                  <div class="flex items-center">
+                    <span class="mr-3 text-lg">🚨</span>
+                    <div>
+                      <strong>Ошибка!</strong> <%= flash[:error] %>
+                    </div>
+                  </div>
+                </div>
               <% end %>
 
-              <div>
-                <label for="name" class="flex justify-between text-sm font-medium leading-6 text-slate-900 dark:text-white">
-                  Name
-                </label>
-                <div class="mt-1">
-                  <%= text_field :user, :name, placeholder: "Enter your full name. eg: Bruce Wayne", required: true, class: "block w-full rounded-md border-0 px-3 py-3 appearance-none shadow-sm ring-1 ring-inset text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-woot-500 sm:text-sm sm:leading-6 outline-none dark:bg-slate-700 dark:ring-slate-600 dark:focus:ring-woot-500 ring-slate-200" %>
+              <div class="space-y-8">
+                <div class="text-center mb-8">
+                  <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                    Шаг 1 из 3: Основная информация 📝
+                  </h3>
+                  <p class="text-slate-600 dark:text-slate-400">
+                    Расскажите нам о себе, чтобы мы могли персонализировать ваш опыт
+                  </p>
                 </div>
-              </div>
 
-              <div>
-                <label for="name" class="flex justify-between text-sm font-medium leading-6 text-slate-900 dark:text-white">
-                  Company Name
-                </label>
-                <div class="mt-1">
-                  <%= text_field :user, :company, placeholder: "Enter your company name. eg: Wayne Enterprises", required: true, class: "block w-full rounded-md border-0 px-3 py-3 appearance-none shadow-sm ring-1 ring-inset text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-woot-500 sm:text-sm sm:leading-6 outline-none dark:bg-slate-700 dark:ring-slate-600 dark:focus:ring-woot-500 ring-slate-200" %>
+                <div class="group">
+                  <label for="user_name" class="block text-sm font-bold text-slate-900 dark:text-white mb-3">
+                    👤 Ваше полное имя
+                  </label>
+                  <div class="relative">
+                    <span class="input-icon text-green-500 text-lg">👤</span>
+                    <%= text_field :user, :name,
+                        placeholder: "Например: Иван Петров",
+                        required: true,
+                        class: "form-glow form-input-with-icon block w-full rounded-xl border-0 py-4 pr-4 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm ring-1 ring-slate-200 dark:ring-slate-600 focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 transition-all duration-300 sm:text-sm outline-none" %>
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label for="name" class="flex justify-between text-sm font-medium leading-6 text-slate-900 dark:text-white">
-                  Work Email
-                </label>
-                <div class="mt-1">
-                  <%= email_field :user, :email, placeholder: "Enter your work email address. eg: bruce@wayne.enterprises", required: true, class: "block w-full rounded-md border-0 px-3 py-3 appearance-none shadow-sm ring-1 ring-inset text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-woot-500 sm:text-sm sm:leading-6 outline-none dark:bg-slate-700 dark:ring-slate-600 dark:focus:ring-woot-500 ring-slate-200" %>
+                <div class="group">
+                  <label for="user_company" class="block text-sm font-bold text-slate-900 dark:text-white mb-3">
+                    🏢 Название компании
+                  </label>
+                  <div class="relative">
+                    <span class="input-icon text-green-500 text-lg">🏢</span>
+                    <%= text_field :user, :company,
+                        placeholder: "Например: ООО Инновации",
+                        required: true,
+                        class: "form-glow form-input-with-icon block w-full rounded-xl border-0 py-4 pr-4 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm ring-1 ring-slate-200 dark:ring-slate-600 focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 transition-all duration-300 sm:text-sm outline-none" %>
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label for="name" class="flex justify-between text-sm font-medium leading-6 text-slate-900 dark:text-white">
-                  Password
-                </label>
-                <div class="mt-1">
-                  <%= password_field :user, :password, placeholder: "Enter a password with 6 characters or more.", required: true, class: "block w-full rounded-md border-0 px-3 py-3 appearance-none shadow-sm ring-1 ring-inset text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-woot-500 sm:text-sm sm:leading-6 outline-none dark:bg-slate-700 dark:ring-slate-600 dark:focus:ring-woot-500 ring-slate-200" %>
+                <div class="group">
+                  <label for="user_email" class="block text-sm font-bold text-slate-900 dark:text-white mb-3">
+                    📧 Рабочая электронная почта
+                  </label>
+                  <div class="relative">
+                    <span class="input-icon text-green-500 text-lg">📧</span>
+                    <%= email_field :user, :email,
+                        placeholder: "admin@вашакомпания.ru",
+                        required: true,
+                        class: "form-glow form-input-with-icon block w-full rounded-xl border-0 py-4 pr-4 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm ring-1 ring-slate-200 dark:ring-slate-600 focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 transition-all duration-300 sm:text-sm outline-none" %>
+                  </div>
                 </div>
-              </div>
 
-              <div class="text-sm text-slate-900">
-                <%= check_box_tag "subscribe_to_updates", 'true', true %>
-                <label class="ml-2" for="subscribe_to_updates">
-                  Subscribe to release notes, newsletters & product feedback surveys.
-                </label>
-              </div>
+                <div class="group">
+                  <label for="user_password" class="block text-sm font-bold text-slate-900 dark:text-white mb-3">
+                    🔐 Создайте надежный пароль
+                  </label>
+                  <div class="relative">
+                    <span class="input-icon text-green-500 text-lg">🔐</span>
+                    <%= password_field :user, :password,
+                        placeholder: "Минимум 6 символов",
+                        required: true,
+                        class: "form-glow form-input-with-icon block w-full rounded-xl border-0 py-4 pr-4 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm ring-1 ring-slate-200 dark:ring-slate-600 focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 transition-all duration-300 sm:text-sm outline-none" %>
+                  </div>
+                  <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                    💡 Используйте комбинацию букв, цифр и символов для большей безопасности
+                  </p>
+                </div>
 
-              <button type="submit" class="flex items-center w-full justify-center rounded-md bg-woot-500 py-3 px-3 text-base font-medium text-white shadow-sm hover:bg-woot-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-woot-500 cursor-pointer">
-                Finish Setup
-              </button>
-            </div>
+                <div class="bg-green-50 dark:bg-green-900/20 rounded-xl p-5 border border-green-200 dark:border-green-800">
+                  <div class="flex items-start">
+                    <div class="flex items-center h-5">
+                      <%= check_box_tag "subscribe_to_updates", 'true', true,
+                          class: "rounded border-green-300 text-green-600 focus:ring-green-500 dark:border-green-600 dark:bg-slate-700" %>
+                    </div>
+                    <div class="ml-3">
+                      <label for="subscribe_to_updates" class="text-sm font-medium text-slate-900 dark:text-slate-100">
+                        🔔 Подписаться на обновления
+                      </label>
+                      <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                        Получайте уведомления о новых функциях, улучшениях и важных обновлениях безопасности
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="w-full ai-glow rounded-xl py-5 px-8 text-xl font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-green-300 dark:focus:ring-green-500/50 transform">
+                  <span class="flex items-center justify-center">
+                    <span class="mr-3 text-2xl">🚀</span>
+                    Завершить настройку СпросиИИ
+                    <span class="ml-3 text-lg">→</span>
+                  </span>
+                </button>
+              </div>
             <% end %>
+
+            <!-- Enhanced footer -->
+            <div class="mt-8 text-center space-y-3">
+              <div class="flex justify-center space-x-4 text-xs text-slate-500 dark:text-slate-400">
+                <span>🛡️ Безопасно</span>
+                <span>⚡ Быстро</span>
+                <span>🤖 AI-powered</span>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400">
+                Защищено передовыми технологиями СпросиИИ
+              </p>
+            </div>
           </div>
         </section>
       </main>

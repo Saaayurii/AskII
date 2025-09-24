@@ -1,6 +1,6 @@
 class Integrations::Openai::ProcessorService < Integrations::OpenaiBaseService
-  AGENT_INSTRUCTION = 'You are a helpful support agent.'.freeze
-  LANGUAGE_INSTRUCTION = 'Ensure that the reply should be in user language.'.freeze
+  AGENT_INSTRUCTION = 'Ты - опытный помощник службы поддержки. Всегда отвечай на русском языке.'.freeze
+  LANGUAGE_INSTRUCTION = 'ВАЖНО: Обязательно отвечай ТОЛЬКО на русском языке. Никогда не используй китайский или английский.'.freeze
   def reply_suggestion_message
     make_api_call(reply_suggestion_body)
   end
@@ -10,37 +10,37 @@ class Integrations::Openai::ProcessorService < Integrations::OpenaiBaseService
   end
 
   def rephrase_message
-    make_api_call(build_api_call_body("#{AGENT_INSTRUCTION} Please rephrase the following response. " \
+    make_api_call(build_api_call_body("#{AGENT_INSTRUCTION} Перефразируй следующий ответ. " \
                                       "#{LANGUAGE_INSTRUCTION}"))
   end
 
   def fix_spelling_grammar_message
-    make_api_call(build_api_call_body("#{AGENT_INSTRUCTION} Please fix the spelling and grammar of the following response. " \
+    make_api_call(build_api_call_body("#{AGENT_INSTRUCTION} Исправь орфографию и грамматику в следующем ответе. " \
                                       "#{LANGUAGE_INSTRUCTION}"))
   end
 
   def shorten_message
-    make_api_call(build_api_call_body("#{AGENT_INSTRUCTION} Please shorten the following response. " \
+    make_api_call(build_api_call_body("#{AGENT_INSTRUCTION} Сократи следующий ответ. " \
                                       "#{LANGUAGE_INSTRUCTION}"))
   end
 
   def expand_message
-    make_api_call(build_api_call_body("#{AGENT_INSTRUCTION} Please expand the following response. " \
+    make_api_call(build_api_call_body("#{AGENT_INSTRUCTION} Расширь следующий ответ, добавь больше деталей. " \
                                       "#{LANGUAGE_INSTRUCTION}"))
   end
 
   def make_friendly_message
-    make_api_call(build_api_call_body("#{AGENT_INSTRUCTION} Please make the following response more friendly. " \
+    make_api_call(build_api_call_body("#{AGENT_INSTRUCTION} Сделай следующий ответ более дружелюбным. " \
                                       "#{LANGUAGE_INSTRUCTION}"))
   end
 
   def make_formal_message
-    make_api_call(build_api_call_body("#{AGENT_INSTRUCTION} Please make the following response more formal. " \
+    make_api_call(build_api_call_body("#{AGENT_INSTRUCTION} Сделай следующий ответ более официальным. " \
                                       "#{LANGUAGE_INSTRUCTION}"))
   end
 
   def simplify_message
-    make_api_call(build_api_call_body("#{AGENT_INSTRUCTION} Please simplify the following response. " \
+    make_api_call(build_api_call_body("#{AGENT_INSTRUCTION} Упрости следующий ответ, сделай его понятнее. " \
                                       "#{LANGUAGE_INSTRUCTION}"))
   end
 

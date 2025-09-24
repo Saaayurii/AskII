@@ -50,7 +50,10 @@ class Attachment < ApplicationRecord
 
   # NOTE: the URl returned does a 301 redirect to the actual file
   def file_url
-    file.attached? ? url_for(file) : ''
+    return '' unless file.attached?
+
+    ActiveStorage::Current.url_options = Rails.application.routes.default_url_options if ActiveStorage::Current.url_options.blank?
+    url_for(file)
   end
 
   # NOTE: for External services use this methods since redirect doesn't work effectively in a lot of cases
@@ -63,6 +66,7 @@ class Attachment < ApplicationRecord
     return '' unless file.attached? && image?
 
     begin
+      ActiveStorage::Current.url_options = Rails.application.routes.default_url_options if ActiveStorage::Current.url_options.blank?
       url_for(file.representation(resize_to_fill: [250, nil]))
     rescue ActiveStorage::UnrepresentableError => e
       Rails.logger.warn "Unrepresentable image attachment: #{id} (#{file.filename}) - #{e.message}"

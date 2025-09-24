@@ -7,7 +7,7 @@
     @apply bg-n-slate-3;
 
     &::after {
-      @apply text-n-blue-text;
+      @apply text-n-green-text;
     }
   }
 }
@@ -31,7 +31,7 @@
 
   .multiselect--active {
     > .multiselect__tags {
-      @apply outline-n-blue-border;
+      @apply outline-n-green-border;
     }
   }
 
@@ -154,7 +154,7 @@
     }
 
     &.multiselect--active > .multiselect__tags {
-      @apply outline-n-blue-border;
+      @apply outline-n-green-border;
     }
   }
 }

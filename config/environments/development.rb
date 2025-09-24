@@ -36,6 +36,11 @@ Rails.application.configure do
 
   Rails.application.routes.default_url_options = { host: ENV['FRONTEND_URL'] }
 
+  # Configure Active Storage URL options for development
+  config.after_initialize do
+    ActiveStorage::Current.url_options = Rails.application.routes.default_url_options
+  end
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
