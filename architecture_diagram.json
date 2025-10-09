@@ -1,0 +1,1367 @@
+{
+  "system": {
+    "name": "СпросиИИ",
+    "description": "Платформа поддержки клиентов с интеграцией локального искусственного интеллекта",
+    "version": "1.0.0",
+    "architecture": "Монолитное Ruby on Rails приложение с микросервисной архитектурой для ИИ",
+
+    "infrastructure": {
+      "deployment": {
+        "type": "Docker Compose",
+        "services": {
+          "rails": {
+            "description": "Основное Rails приложение",
+            "image": "chatwoot-rails:development",
+            "port": 3000,
+            "responsibilities": [
+              "HTTP запросы и API endpoints",
+              "Бизнес-логика приложения",
+              "Рендеринг веб-интерфейса",
+              "Управление сессиями и аутентификацией",
+              "Координация между модулями"
+            ],
+            "dependencies": ["postgres", "redis", "vite", "mailhog", "sidekiq", "ollama"]
+          },
+
+          "sidekiq": {
+            "description": "Фоновые задачи и обработка очередей",
+            "responsibilities": [
+              "Асинхронная отправка email и уведомлений",
+              "Обработка вебхуков от внешних сервисов",
+              "Периодические задачи (cron jobs)",
+              "Обработка больших объемов данных",
+              "Генерация отчетов",
+              "Синхронизация с внешними системами"
+            ],
+            "dependencies": ["postgres", "redis", "mailhog"]
+          },
+
+          "vite": {
+            "description": "Фронтенд сервер разработки",
+            "port": 3036,
+            "responsibilities": [
+              "Hot Module Replacement (HMR)",
+              "Сборка Vue.js компонентов",
+              "Компиляция TypeScript",
+              "Обработка Tailwind CSS",
+              "Оптимизация ассетов"
+            ]
+          },
+
+          "postgres": {
+            "description": "База данных PostgreSQL 16 с pgvector",
+            "image": "pgvector/pgvector:pg16",
+            "port": 5432,
+            "responsibilities": [
+              "Хранение всех данных приложения",
+              "Векторный поиск (pgvector) для эмбеддингов",
+              "Транзакционная целостность",
+              "Индексирование и оптимизация запросов",
+              "Репликация и резервное копирование"
+            ],
+            "extensions": ["pgvector"]
+          },
+
+          "redis": {
+            "description": "In-memory кэш и брокер сообщений",
+            "port": 6379,
+            "responsibilities": [
+              "Кэширование данных приложения",
+              "Хранение очередей Sidekiq",
+              "Управление сессиями",
+              "Rate limiting",
+              "Pub/Sub для real-time уведомлений",
+              "Временное хранение данных"
+            ]
+          },
+
+          "mailhog": {
+            "description": "SMTP тестирование для разработки",
+            "ports": [1025, 8025],
+            "responsibilities": [
+              "Перехват исходящих email в dev режиме",
+              "Веб-интерфейс для просмотра писем",
+              "Тестирование email шаблонов"
+            ]
+          },
+
+          "ollama": {
+            "description": "Локальный сервер ИИ моделей",
+            "image": "ollama/ollama:latest",
+            "port": 11434,
+            "responsibilities": [
+              "Хостинг локальных языковых моделей",
+              "Обработка запросов к ИИ",
+              "Генерация текста и ответов",
+              "Векторизация текста для поиска",
+              "Inference для Qwen2.5:14b модели"
+            ],
+            "models": ["qwen2.5:14b", "qwen2.5:3b"],
+            "api_endpoint": "http://ollama:11434/v1"
+          }
+        }
+      },
+
+      "storage": {
+        "volumes": {
+          "postgres": "Данные PostgreSQL",
+          "redis": "Данные Redis",
+          "chatwoot_ollama_data": "Модели и данные Ollama",
+          "bundle": "Ruby gems",
+          "node_modules": "NPM пакеты",
+          "packs": "Скомпилированные ассеты",
+          "cache": "Временный кэш",
+          "storage": "Файлы и изображения пользователей"
+        }
+      }
+    },
+
+    "backend": {
+      "framework": "Ruby on Rails 7.x",
+      "language": "Ruby 3.2+",
+
+      "core_modules": {
+        "accounts_module": {
+          "description": "Управление аккаунтами организаций",
+          "models": ["Account", "AccountUser"],
+          "responsibilities": [
+            "Создание и управление организациями",
+            "Управление пользователями аккаунта",
+            "Настройки и конфигурация аккаунта",
+            "Биллинг и подписки",
+            "Лимиты и квоты"
+          ],
+          "api_endpoints": [
+            "POST /api/v1/accounts - Создание аккаунта",
+            "GET /api/v1/accounts/:id - Получение аккаунта",
+            "PATCH /api/v1/accounts/:id - Обновление аккаунта"
+          ]
+        },
+
+        "users_module": {
+          "description": "Управление пользователями и аутентификация",
+          "models": ["User", "AccountUser"],
+          "responsibilities": [
+            "Регистрация и вход пользователей",
+            "Управление профилями",
+            "Роли и права доступа (administrator, agent, viewer)",
+            "Сброс паролей",
+            "2FA аутентификация",
+            "SSO интеграция"
+          ],
+          "authentication": "Devise + JWT tokens",
+          "api_endpoints": [
+            "POST /api/v1/auth/signup - Регистрация",
+            "POST /api/v1/auth/login - Вход",
+            "DELETE /api/v1/auth/logout - Выход"
+          ]
+        },
+
+        "conversations_module": {
+          "description": "Управление разговорами с клиентами",
+          "models": ["Conversation", "Message", "ConversationParticipant"],
+          "responsibilities": [
+            "Создание и управление разговорами",
+            "Хранение истории сообщений",
+            "Статусы разговоров (open, pending, resolved, snoozed)",
+            "Назначение агентов на разговоры",
+            "Приоритеты и SLA",
+            "Метки и категоризация",
+            "Приватные заметки"
+          ],
+          "statuses": ["open", "pending", "resolved", "snoozed"],
+          "api_endpoints": [
+            "GET /api/v1/accounts/:account_id/conversations - Список разговоров",
+            "GET /api/v1/accounts/:account_id/conversations/:id - Детали разговора",
+            "POST /api/v1/accounts/:account_id/conversations/:id/messages - Отправка сообщения",
+            "PATCH /api/v1/accounts/:account_id/conversations/:id/toggle_status - Изменение статуса"
+          ],
+          "integrations": ["captain_assistant", "automation_rules", "webhooks"]
+        },
+
+        "messages_module": {
+          "description": "Обработка сообщений",
+          "models": ["Message", "Attachment"],
+          "message_types": {
+            "incoming": "Сообщения от клиентов",
+            "outgoing": "Ответы агентов",
+            "activity": "Системные уведомления",
+            "template": "Шаблонные сообщения"
+          },
+          "responsibilities": [
+            "Создание и хранение сообщений",
+            "Обработка вложений (изображения, файлы, видео)",
+            "Форматирование текста (Markdown, HTML)",
+            "Анализ тональности (sentiment analysis)",
+            "Интеграция с ИИ для автоответов",
+            "Отметки о прочтении"
+          ],
+          "features": [
+            "Rich text редактор",
+            "Emoji поддержка",
+            "Упоминания @mentions",
+            "Ссылки на сообщения",
+            "Реакции на сообщения"
+          ]
+        },
+
+        "contacts_module": {
+          "description": "Управление контактами клиентов",
+          "models": ["Contact", "ContactInbox"],
+          "responsibilities": [
+            "Профили клиентов",
+            "История взаимодействий",
+            "Кастомные атрибуты",
+            "Сегментация контактов",
+            "Импорт/экспорт контактов",
+            "Дедупликация контактов",
+            "Блокировка спама"
+          ],
+          "attributes": [
+            "Имя, email, телефон",
+            "Местоположение (страна, город)",
+            "Социальные профили",
+            "Компания и должность",
+            "Теги и метки",
+            "Пользовательские поля"
+          ]
+        },
+
+        "inboxes_module": {
+          "description": "Управление каналами связи (инбоксы)",
+          "models": ["Inbox", "InboxMember", "Channel::*"],
+          "channel_types": {
+            "web_widget": "Веб-чат на сайте",
+            "email": "Email интеграция",
+            "facebook": "Facebook Messenger",
+            "instagram": "Instagram Direct",
+            "twitter": "Twitter DM",
+            "whatsapp": "WhatsApp Business",
+            "telegram": "Telegram бот",
+            "line": "LINE мессенджер",
+            "sms": "SMS каналы (Twilio)"
+          },
+          "responsibilities": [
+            "Конфигурация каналов связи",
+            "Прием входящих сообщений",
+            "Отправка исходящих сообщений",
+            "Управление доступом агентов",
+            "Автоответчики",
+            "Рабочие часы",
+            "Предварительные формы"
+          ],
+          "features": [
+            "Мультиканальность",
+            "Автоназначение разговоров",
+            "Webhook уведомления",
+            "CSAT опросы"
+          ]
+        },
+
+        "agent_bots_module": {
+          "description": "Боты и автоматизация",
+          "models": ["AgentBot", "AgentBotInbox"],
+          "responsibilities": [
+            "Создание чат-ботов",
+            "Интеграция с Dialogflow",
+            "Webhook боты",
+            "Handoff к живым агентам",
+            "Автоматические ответы"
+          ]
+        },
+
+        "automation_rules_module": {
+          "description": "Правила автоматизации",
+          "models": ["AutomationRule"],
+          "responsibilities": [
+            "Условия и триггеры",
+            "Автоматические действия",
+            "Назначение агентов",
+            "Применение меток",
+            "Отправка сообщений",
+            "Изменение приоритетов"
+          ],
+          "triggers": [
+            "Создание разговора",
+            "Изменение статуса",
+            "Назначение агента",
+            "Добавление метки",
+            "Истечение SLA"
+          ],
+          "actions": [
+            "Назначить агента/команду",
+            "Добавить/удалить метки",
+            "Отправить email",
+            "Отправить сообщение",
+            "Изменить приоритет"
+          ]
+        },
+
+        "canned_responses_module": {
+          "description": "Заготовленные ответы",
+          "models": ["CannedResponse"],
+          "responsibilities": [
+            "Шаблоны быстрых ответов",
+            "Короткие коды для вставки",
+            "Персонализация через переменные",
+            "Поиск по шорткодам"
+          ]
+        },
+
+        "labels_module": {
+          "description": "Метки для категоризации",
+          "models": ["Label"],
+          "responsibilities": [
+            "Создание цветных меток",
+            "Применение к разговорам",
+            "Фильтрация по меткам",
+            "Отчеты по меткам",
+            "ИИ предложения меток"
+          ]
+        },
+
+        "teams_module": {
+          "description": "Управление командами",
+          "models": ["Team", "TeamMember"],
+          "responsibilities": [
+            "Создание команд агентов",
+            "Управление членами команды",
+            "Назначение разговоров командам",
+            "Отчеты по командам"
+          ]
+        },
+
+        "campaigns_module": {
+          "description": "Маркетинговые кампании",
+          "models": ["Campaign"],
+          "responsibilities": [
+            "Создание кампаний",
+            "Сегментация аудитории",
+            "Планирование отправки",
+            "Триггерные кампании",
+            "Аналитика кампаний"
+          ],
+          "campaign_types": ["one_off", "ongoing"]
+        },
+
+        "portals_module": {
+          "description": "Порталы самообслуживания (центр знаний)",
+          "models": ["Portal", "Category", "Article"],
+          "responsibilities": [
+            "Создание порталов помощи",
+            "Управление категориями",
+            "Публикация статей",
+            "Поиск по базе знаний",
+            "Мультиязычность",
+            "SEO оптимизация"
+          ],
+          "features": [
+            "Markdown редактор",
+            "Версионирование статей",
+            "Публичный/приватный доступ",
+            "Виджет на сайте"
+          ]
+        },
+
+        "integrations_module": {
+          "description": "Интеграции с внешними сервисами",
+          "models": ["Integrations::*"],
+          "supported_integrations": {
+            "slack": "Управление разговорами через Slack",
+            "dialogflow": "ИИ чат-боты",
+            "google_translate": "Автоматический перевод",
+            "linear": "Создание тикетов",
+            "shopify": "Интеграция с заказами"
+          },
+          "responsibilities": [
+            "OAuth аутентификация",
+            "Синхронизация данных",
+            "Webhook обработка",
+            "API коммуникация"
+          ]
+        },
+
+        "reports_module": {
+          "description": "Аналитика и отчеты",
+          "responsibilities": [
+            "Отчеты по разговорам",
+            "Метрики агентов (response time, resolution time)",
+            "Отчеты по инбоксам",
+            "Отчеты по меткам",
+            "CSAT аналитика",
+            "Экспорт в CSV",
+            "Дашборды в реальном времени"
+          ],
+          "metrics": [
+            "First response time",
+            "Average resolution time",
+            "Number of conversations",
+            "CSAT score",
+            "Agent utilization"
+          ]
+        },
+
+        "webhooks_module": {
+          "description": "Вебхуки для интеграций",
+          "models": ["Webhook"],
+          "responsibilities": [
+            "Создание вебхуков",
+            "Фильтрация событий",
+            "Отправка HTTP запросов",
+            "Retry логика",
+            "Логирование"
+          ],
+          "events": [
+            "conversation_created",
+            "conversation_updated",
+            "message_created",
+            "contact_created",
+            "agent_assigned"
+          ]
+        }
+      },
+
+      "ai_modules": {
+        "captain_system": {
+          "description": "Система локального ИИ помощника (Captain)",
+          "namespace": "Enterprise::Captain",
+          "models": {
+            "captain_assistant": {
+              "model": "Captain::Assistant",
+              "description": "Конфигурация ИИ помощника",
+              "attributes": [
+                "name - Название помощника",
+                "description - Описание функций",
+                "config - JSON конфигурация модели",
+                "response_guidelines - Инструкции для ответов",
+                "guardrails - Ограничения и правила"
+              ],
+              "responsibilities": [
+                "Хранение конфигурации ИИ",
+                "Связь с инбоксами",
+                "Управление документами базы знаний",
+                "Настройки промптов и поведения"
+              ]
+            },
+
+            "captain_inbox": {
+              "model": "CaptainInbox",
+              "description": "Связь ИИ помощника с инбоксами",
+              "attributes": [
+                "captain_assistant_id",
+                "inbox_id"
+              ],
+              "responsibilities": [
+                "Привязка помощника к каналам связи",
+                "Управление доступом ИИ к разговорам"
+              ]
+            },
+
+            "captain_document": {
+              "model": "Captain::Document",
+              "description": "Документы базы знаний для ИИ",
+              "attributes": [
+                "title - Название документа",
+                "content - Текст документа",
+                "metadata - Дополнительные данные",
+                "status - Статус (active, archived)",
+                "embeddings - Векторное представление"
+              ],
+              "responsibilities": [
+                "Хранение контента для обучения ИИ",
+                "Векторизация текста (embeddings)",
+                "Семантический поиск",
+                "Контекстная релевантность"
+              ]
+            },
+
+            "captain_assistant_response": {
+              "model": "Captain::AssistantResponse",
+              "description": "Ответы, сгенерированные ИИ",
+              "attributes": [
+                "conversation_id",
+                "message_id",
+                "prompt - Исходный запрос",
+                "response - Ответ ИИ",
+                "status - Статус (pending, completed, failed)",
+                "metadata - Метаданные генерации"
+              ],
+              "responsibilities": [
+                "Сохранение истории ИИ взаимодействий",
+                "Отслеживание качества ответов",
+                "Аналитика использования ИИ"
+              ]
+            },
+
+            "captain_scenario": {
+              "model": "Captain::Scenario",
+              "description": "Сценарии использования ИИ",
+              "responsibilities": [
+                "Предопределенные сценарии ответов",
+                "Контекстные промпты",
+                "Специализированные use cases"
+              ]
+            }
+          },
+
+          "services": {
+            "captain_assistant_service": {
+              "description": "Обработка запросов к ИИ",
+              "responsibilities": [
+                "Формирование промптов",
+                "Отправка запросов в Ollama",
+                "Обработка ответов",
+                "Контекстное дополнение из документов",
+                "Error handling и retry"
+              ],
+              "workflow": [
+                "1. Получение запроса от пользователя",
+                "2. Загрузка конфигурации Assistant",
+                "3. Поиск релевантных документов (vector search)",
+                "4. Формирование промпта с контекстом",
+                "5. Отправка в Ollama API",
+                "6. Получение и валидация ответа",
+                "7. Сохранение в AssistantResponse",
+                "8. Возврат результата агенту"
+              ]
+            },
+
+            "document_embedding_service": {
+              "description": "Векторизация документов",
+              "responsibilities": [
+                "Генерация embeddings для документов",
+                "Сохранение в pgvector",
+                "Обновление векторов при изменении",
+                "Семантический поиск"
+              ]
+            },
+
+            "copilot_service": {
+              "description": "ИИ ассистент для агентов",
+              "models": ["CopilotThread", "CopilotMessage"],
+              "features": [
+                "Expand - Расширение краткого текста",
+                "Summarize - Резюме разговора",
+                "Rephrase - Переформулирование",
+                "Fix spelling - Исправление грамматики",
+                "Make friendly - Дружелюбный тон",
+                "Make formal - Формальный тон",
+                "Label suggestions - Предложение меток"
+              ],
+              "responsibilities": [
+                "Помощь агентам в реальном времени",
+                "Улучшение качества ответов",
+                "Ускорение работы агентов"
+              ]
+            }
+          },
+
+          "api_endpoints": [
+            "POST /api/v1/accounts/:account_id/captain/assistants - Создание помощника",
+            "GET /api/v1/accounts/:account_id/captain/assistants - Список помощников",
+            "POST /api/v1/accounts/:account_id/captain/documents - Загрузка документа",
+            "POST /api/v1/accounts/:account_id/captain/assistant_responses - Генерация ответа",
+            "GET /api/v1/accounts/:account_id/captain/copilot_threads - История Copilot"
+          ],
+
+          "integration_with_ollama": {
+            "connection": "HTTP API на http://ollama:11434",
+            "model_config": {
+              "default_model": "qwen2.5:14b",
+              "temperature": 0.7,
+              "top_p": 0.9,
+              "top_k": 40,
+              "context_window": 4096
+            },
+            "features": [
+              "Локальное развертывание - нет отправки данных вовне",
+              "Кастомные промпты на русском языке",
+              "Низкая задержка ответов",
+              "Нет затрат на API"
+            ]
+          }
+        }
+      },
+
+      "background_jobs": {
+        "description": "Фоновые задачи через Sidekiq",
+        "queues": {
+          "default": "Общие задачи",
+          "mailers": "Отправка email",
+          "webhooks": "Обработка вебхуков",
+          "integrations": "Синхронизация с внешними API",
+          "low": "Низкоприоритетные задачи"
+        },
+        "common_jobs": [
+          "SendEmailJob - Отправка email",
+          "WebhookJob - Отправка вебхуков",
+          "ConversationReplyEmailJob - Уведомления о новых сообщениях",
+          "DataImportJob - Импорт данных",
+          "ReportGenerationJob - Генерация отчетов",
+          "CaptainDocumentEmbeddingJob - Векторизация документов"
+        ]
+      },
+
+      "real_time": {
+        "websockets": {
+          "framework": "Action Cable",
+          "channels": [
+            "RoomChannel - Обновления разговоров в реальном времени",
+            "NotificationChannel - Уведомления агентам",
+            "PresenceChannel - Онлайн статус"
+          ],
+          "events": [
+            "message.created",
+            "conversation.updated",
+            "typing.on",
+            "typing.off",
+            "presence.update"
+          ]
+        }
+      }
+    },
+
+    "frontend": {
+      "framework": "Vue.js 3 с Composition API",
+      "build_tool": "Vite",
+      "styling": "Tailwind CSS",
+
+      "architecture": {
+        "type": "SPA (Single Page Application)",
+        "routing": "Vue Router",
+        "state_management": "Vuex store",
+        "api_client": "Axios с interceptors"
+      },
+
+      "main_applications": {
+        "dashboard": {
+          "path": "/app/javascript/dashboard",
+          "description": "Панель управления для агентов",
+          "routes": {
+            "conversations": "/app/accounts/:accountId/conversations",
+            "contacts": "/app/accounts/:accountId/contacts",
+            "reports": "/app/accounts/:accountId/reports",
+            "settings": "/app/accounts/:accountId/settings",
+            "captain": "/app/accounts/:accountId/captain"
+          },
+          "key_components": {
+            "conversation_view": {
+              "description": "Просмотр и управление разговором",
+              "features": [
+                "История сообщений",
+                "Редактор ответов с rich text",
+                "Панель информации о контакте",
+                "Быстрые действия (метки, назначение, статус)",
+                "Приватные заметки",
+                "Вложения файлов",
+                "Copilot панель с ИИ предложениями"
+              ]
+            },
+
+            "conversation_list": {
+              "description": "Список разговоров с фильтрами",
+              "features": [
+                "Фильтрация по статусу, агенту, инбоксу",
+                "Поиск по контактам и содержимому",
+                "Пагинация",
+                "Bulk actions",
+                "Сортировка"
+              ]
+            },
+
+            "contact_panel": {
+              "description": "Панель с информацией о контакте",
+              "features": [
+                "Профиль клиента",
+                "История разговоров",
+                "Кастомные атрибуты",
+                "Социальные профили",
+                "Теги и метки"
+              ]
+            },
+
+            "copilot_container": {
+              "component": "CopilotContainer.vue",
+              "description": "ИИ помощник для агентов",
+              "features": [
+                "Интерфейс для запросов к ИИ",
+                "Предложения улучшения текста",
+                "Быстрые действия (expand, summarize, rephrase)",
+                "История запросов",
+                "Копирование ответов в редактор"
+              ],
+              "integration": "Взаимодействие с Captain API"
+            },
+
+            "inbox_settings": {
+              "description": "Настройки каналов связи",
+              "features": [
+                "Конфигурация каналов",
+                "Управление членами инбокса",
+                "Настройка автоответчиков",
+                "Рабочие часы",
+                "Pre-chat формы",
+                "Webhook настройки"
+              ]
+            },
+
+            "captain_management": {
+              "description": "Управление ИИ помощниками",
+              "features": [
+                "Создание/редактирование помощников",
+                "Загрузка документов базы знаний",
+                "Настройка промптов и поведения",
+                "Тестирование ответов",
+                "Аналитика использования",
+                "Привязка к инбоксам"
+              ]
+            },
+
+            "reports_dashboard": {
+              "description": "Дашборд с аналитикой",
+              "charts": [
+                "Conversations over time",
+                "Response time metrics",
+                "Agent performance",
+                "CSAT scores",
+                "Label distribution"
+              ],
+              "export": "CSV, Excel"
+            }
+          }
+        },
+
+        "widget": {
+          "path": "/app/javascript/widget",
+          "description": "Веб-виджет для сайта клиента",
+          "features": [
+            "Минималистичный интерфейс чата",
+            "Поддержка вложений",
+            "Предварительные формы",
+            "Typing indicators",
+            "Прочтение сообщений",
+            "Emoji picker",
+            "Кастомизация цветов и текстов"
+          ],
+          "embedding": "<script> тег для встраивания на сайт"
+        },
+
+        "portal": {
+          "path": "/app/javascript/portal",
+          "description": "Портал самообслуживания (Help Center)",
+          "features": [
+            "Просмотр статей",
+            "Поиск по базе знаний",
+            "Категории и подкатегории",
+            "Голосование за полезность статей",
+            "Комментарии",
+            "Связанные статьи",
+            "Хлебные крошки навигации"
+          ]
+        },
+
+        "superadmin": {
+          "path": "/app/javascript/superadmin_pages",
+          "description": "Панель суперадминистратора",
+          "features": [
+            "Управление всеми аккаунтами",
+            "Системная статистика",
+            "Feature flags",
+            "Импорт/экспорт данных"
+          ]
+        }
+      },
+
+      "state_management": {
+        "vuex_modules": {
+          "accounts": "Данные текущего аккаунта",
+          "auth": "Аутентификация и пользователь",
+          "conversations": "Список и детали разговоров",
+          "contacts": "Контакты клиентов",
+          "inboxes": "Инбоксы и каналы",
+          "agents": "Агенты и команды",
+          "labels": "Метки",
+          "cannedResponses": "Заготовленные ответы",
+          "reports": "Данные отчетов",
+          "captain": "Состояние ИИ помощника"
+        }
+      },
+
+      "real_time_updates": {
+        "mechanism": "ActionCable WebSocket подписки",
+        "channels": [
+          "RoomChannel - Обновления разговоров",
+          "NotificationChannel - Уведомления"
+        ],
+        "auto_updates": [
+          "Новые сообщения",
+          "Изменения статуса",
+          "Typing indicators",
+          "Присутствие агентов"
+        ]
+      }
+    },
+
+    "database": {
+      "system": "PostgreSQL 16 с pgvector",
+
+      "core_tables": {
+        "accounts": {
+          "description": "Организации",
+          "key_columns": ["id", "name", "locale", "domain", "support_email"]
+        },
+
+        "users": {
+          "description": "Пользователи системы",
+          "key_columns": ["id", "email", "name", "role", "confirmed_at"]
+        },
+
+        "account_users": {
+          "description": "Связь пользователей и аккаунтов",
+          "key_columns": ["id", "account_id", "user_id", "role", "availability"]
+        },
+
+        "conversations": {
+          "description": "Разговоры",
+          "key_columns": [
+            "id",
+            "account_id",
+            "inbox_id",
+            "contact_id",
+            "assignee_id",
+            "status (open/pending/resolved/snoozed)",
+            "priority",
+            "snoozed_until",
+            "first_reply_created_at",
+            "last_activity_at"
+          ],
+          "indexes": [
+            "index_on_account_id_and_status",
+            "index_on_assignee_id",
+            "index_on_contact_id"
+          ]
+        },
+
+        "messages": {
+          "description": "Сообщения в разговорах",
+          "key_columns": [
+            "id",
+            "conversation_id",
+            "account_id",
+            "inbox_id",
+            "sender_type (Contact/User/AgentBot)",
+            "sender_id",
+            "message_type (incoming/outgoing/activity/template)",
+            "content",
+            "private (приватная заметка)",
+            "sentiment (положительная/отрицательная тональность)",
+            "created_at"
+          ],
+          "indexes": [
+            "index_on_conversation_id",
+            "index_on_sender_type_and_sender_id"
+          ]
+        },
+
+        "contacts": {
+          "description": "Контакты клиентов",
+          "key_columns": [
+            "id",
+            "account_id",
+            "name",
+            "email",
+            "phone_number",
+            "country_code",
+            "location",
+            "blocked",
+            "custom_attributes (JSONB)",
+            "last_activity_at"
+          ]
+        },
+
+        "contact_inboxes": {
+          "description": "Связь контактов с инбоксами",
+          "key_columns": ["id", "contact_id", "inbox_id", "source_id"]
+        },
+
+        "inboxes": {
+          "description": "Каналы связи",
+          "key_columns": [
+            "id",
+            "account_id",
+            "name",
+            "channel_type (Channel::WebWidget/Channel::Email/...)",
+            "channel_id",
+            "enable_auto_assignment",
+            "greeting_enabled",
+            "greeting_message",
+            "working_hours_enabled"
+          ]
+        },
+
+        "inbox_members": {
+          "description": "Агенты, назначенные на инбокс",
+          "key_columns": ["id", "inbox_id", "user_id"]
+        },
+
+        "labels": {
+          "description": "Метки для категоризации",
+          "key_columns": ["id", "account_id", "title", "description", "color"]
+        },
+
+        "canned_responses": {
+          "description": "Заготовленные ответы",
+          "key_columns": ["id", "account_id", "short_code", "content"]
+        },
+
+        "automation_rules": {
+          "description": "Правила автоматизации",
+          "key_columns": [
+            "id",
+            "account_id",
+            "name",
+            "event_name (conversation_created/...)",
+            "conditions (JSONB)",
+            "actions (JSONB)",
+            "active"
+          ]
+        },
+
+        "webhooks": {
+          "description": "Вебхуки",
+          "key_columns": [
+            "id",
+            "account_id",
+            "url",
+            "webhook_type",
+            "subscriptions (array of events)"
+          ]
+        }
+      },
+
+      "ai_tables": {
+        "captain_assistants": {
+          "description": "ИИ помощники",
+          "key_columns": [
+            "id",
+            "account_id",
+            "name",
+            "description",
+            "config (JSONB - настройки модели)",
+            "response_guidelines (текстовые инструкции)",
+            "guardrails (ограничения)"
+          ]
+        },
+
+        "captain_inboxes": {
+          "description": "Связь помощников с инбоксами",
+          "key_columns": ["id", "captain_assistant_id", "inbox_id"],
+          "unique_constraint": "captain_assistant_id + inbox_id"
+        },
+
+        "captain_documents": {
+          "description": "База знаний для ИИ",
+          "key_columns": [
+            "id",
+            "captain_assistant_id",
+            "title",
+            "content (текст документа)",
+            "metadata (JSONB)",
+            "status (active/archived)",
+            "embeddings (vector - pgvector для семантического поиска)"
+          ],
+          "vector_index": "index_on_embeddings (HNSW)"
+        },
+
+        "captain_assistant_responses": {
+          "description": "История ИИ ответов",
+          "key_columns": [
+            "id",
+            "captain_assistant_id",
+            "conversation_id",
+            "message_id",
+            "prompt (исходный запрос)",
+            "response (ответ ИИ)",
+            "status (pending/completed/failed)",
+            "metadata (JSONB - параметры генерации)"
+          ]
+        },
+
+        "captain_scenarios": {
+          "description": "Сценарии использования ИИ",
+          "key_columns": ["id", "captain_assistant_id", "name", "prompt_template"]
+        },
+
+        "copilot_threads": {
+          "description": "Потоки Copilot ассистента",
+          "key_columns": [
+            "id",
+            "account_id",
+            "user_id",
+            "conversation_id"
+          ]
+        },
+
+        "copilot_messages": {
+          "description": "Сообщения Copilot",
+          "key_columns": [
+            "id",
+            "copilot_thread_id",
+            "message_type (user/assistant)",
+            "content",
+            "metadata (JSONB)"
+          ]
+        }
+      },
+
+      "channel_tables": {
+        "channels": {
+          "polymorphic": "STI (Single Table Inheritance)",
+          "types": [
+            "Channel::WebWidget",
+            "Channel::Email",
+            "Channel::FacebookPage",
+            "Channel::Instagram",
+            "Channel::TwitterProfile",
+            "Channel::Whatsapp",
+            "Channel::TelegramChannel",
+            "Channel::Line",
+            "Channel::Sms"
+          ],
+          "shared_columns": ["id", "account_id", "type"],
+          "type_specific_attributes": "Хранятся в отдельных полях"
+        }
+      },
+
+      "indexes_and_performance": {
+        "key_indexes": [
+          "conversations(account_id, status, inbox_id)",
+          "messages(conversation_id, created_at)",
+          "contacts(account_id, email)",
+          "captain_documents(embeddings) - Vector index для поиска"
+        ],
+        "partitioning": "Планируется для messages по дате",
+        "caching": "Rails.cache через Redis"
+      },
+
+      "pgvector_usage": {
+        "description": "Векторное расширение PostgreSQL",
+        "use_cases": [
+          "Семантический поиск по документам",
+          "Поиск похожих разговоров",
+          "Рекомендации статей помощи"
+        ],
+        "embedding_dimension": 1536,
+        "similarity_metric": "cosine distance",
+        "index_type": "HNSW (Hierarchical Navigable Small World)"
+      }
+    },
+
+    "external_integrations": {
+      "ollama": {
+        "type": "Локальный ИИ сервер",
+        "url": "http://ollama:11434",
+        "api": "OpenAI-compatible API",
+        "models": ["qwen2.5:14b", "qwen2.5:3b"],
+        "usage": [
+          "Генерация ответов Captain",
+          "Copilot предложения",
+          "Векторизация текста (embeddings)",
+          "Summarization разговоров",
+          "Label suggestions"
+        ],
+        "benefits": [
+          "100% приватность - данные не покидают инфраструктуру",
+          "Нет затрат на API",
+          "Низкая задержка",
+          "Кастомизация под русский язык"
+        ]
+      },
+
+      "email_providers": {
+        "smtp": "Отправка email через SMTP",
+        "imap": "Получение email через IMAP",
+        "providers": ["Gmail", "Outlook", "Custom SMTP"]
+      },
+
+      "social_messengers": {
+        "facebook": {
+          "api": "Facebook Graph API",
+          "webhooks": "Получение сообщений Messenger"
+        },
+        "instagram": {
+          "api": "Instagram Graph API",
+          "webhooks": "Instagram Direct Messages"
+        },
+        "twitter": {
+          "api": "Twitter API v2",
+          "webhooks": "Direct Messages"
+        },
+        "whatsapp": {
+          "provider": "Twilio / Cloud API",
+          "features": ["Text", "Media", "Templates"]
+        },
+        "telegram": {
+          "api": "Telegram Bot API",
+          "webhooks": "Telegram updates"
+        }
+      },
+
+      "other_services": {
+        "slack": {
+          "integration": "OAuth 2.0",
+          "features": ["Управление разговорами", "Уведомления"]
+        },
+        "dialogflow": {
+          "integration": "Google Dialogflow",
+          "features": ["NLU", "Intent matching", "Handoff"]
+        },
+        "linear": {
+          "integration": "Linear API",
+          "features": ["Создание issues", "Синхронизация статусов"]
+        },
+        "shopify": {
+          "integration": "Shopify API",
+          "features": ["Информация о заказах", "Customer data"]
+        }
+      }
+    },
+
+    "data_flow": {
+      "incoming_message_flow": [
+        "1. Сообщение приходит через канал (webhook/polling)",
+        "2. Webhook controller обрабатывает входящий запрос",
+        "3. Message создается в базе данных",
+        "4. Если включен Captain - проверяется необходимость автоответа",
+        "5. Captain Assistant анализирует сообщение",
+        "6. Поиск релевантных документов через vector search",
+        "7. Формирование промпта с контекстом",
+        "8. Запрос в Ollama API",
+        "9. Получение ответа от ИИ",
+        "10. Сохранение ответа в captain_assistant_responses",
+        "11. Опционально - автоматическая отправка ответа или предложение агенту",
+        "12. WebSocket уведомление агентам о новом сообщении",
+        "13. Применение automation rules",
+        "14. Отправка webhook уведомлений",
+        "15. Email уведомление назначенному агенту (если настроено)"
+      ],
+
+      "agent_reply_flow": [
+        "1. Агент печатает ответ в редакторе",
+        "2. Опционально - использует Copilot для улучшения текста",
+        "3. Copilot отправляет запрос в Ollama через Captain API",
+        "4. Получает предложения (rephrase, expand, fix spelling)",
+        "5. Агент выбирает или редактирует предложение",
+        "6. Отправка сообщения через API",
+        "7. Создание Message в БД",
+        "8. Отправка через соответствующий канал (email, messenger, etc)",
+        "9. WebSocket обновление для других агентов",
+        "10. Обновление статуса разговора (если нужно)",
+        "11. Webhook уведомления"
+      ],
+
+      "copilot_assistance_flow": [
+        "1. Агент выбирает текст в редакторе",
+        "2. Открывает Copilot панель",
+        "3. Выбирает действие (Expand/Summarize/Rephrase/etc)",
+        "4. Frontend отправляет POST /api/v1/.../captain/copilot_threads/:id/messages",
+        "5. Backend создает CopilotMessage",
+        "6. Формирует промпт для выбранного действия",
+        "7. Отправляет в Ollama API",
+        "8. Получает ответ от ИИ",
+        "9. Сохраняет в copilot_messages",
+        "10. Возвращает результат агенту",
+        "11. Агент копирует результат в редактор или редактирует"
+      ],
+
+      "document_indexing_flow": [
+        "1. Агент загружает документ через Captain UI",
+        "2. POST /api/v1/.../captain/documents",
+        "3. Создается captain_document запись",
+        "4. Запускается фоновая задача EmbeddingJob",
+        "5. Текст документа разбивается на чанки",
+        "6. Каждый чанк отправляется в Ollama для векторизации",
+        "7. Получаются embeddings (векторы 1536 размерности)",
+        "8. Сохраняются в captain_documents.embeddings (pgvector)",
+        "9. Создается HNSW индекс для быстрого поиска",
+        "10. Документ готов для использования в контексте"
+      ],
+
+      "semantic_search_flow": [
+        "1. При запросе к ИИ формируется поисковый запрос",
+        "2. Запрос векторизуется через Ollama embeddings",
+        "3. Выполняется SQL запрос с pgvector операторами",
+        "4. SELECT * FROM captain_documents ORDER BY embeddings <-> query_vector LIMIT 5",
+        "5. Получаются топ-N наиболее релевантных документов",
+        "6. Документы добавляются в контекст промпта",
+        "7. ИИ генерирует ответ на основе контекста"
+      ]
+    },
+
+    "security": {
+      "authentication": {
+        "mechanism": "Devise + JWT tokens",
+        "token_storage": "HTTP-only cookies",
+        "token_expiry": "24 hours",
+        "refresh_tokens": "Да, 30 дней"
+      },
+
+      "authorization": {
+        "system": "Role-based access control (RBAC)",
+        "roles": [
+          "administrator - Полный доступ",
+          "agent - Управление разговорами",
+          "viewer - Только просмотр"
+        ],
+        "policies": "Через Pundit gem"
+      },
+
+      "data_protection": {
+        "encryption_at_rest": "PostgreSQL encryption",
+        "encryption_in_transit": "TLS/SSL",
+        "password_hashing": "bcrypt",
+        "sensitive_data": "Шифрование API ключей в БД"
+      },
+
+      "rate_limiting": {
+        "api": "Rack::Attack middleware",
+        "limits": [
+          "60 запросов/минуту для API",
+          "10 попыток логина/минуту"
+        ]
+      },
+
+      "data_privacy": {
+        "ai_privacy": "Все запросы к ИИ обрабатываются локально через Ollama",
+        "no_external_ai": "Данные клиентов не отправляются в OpenAI, Anthropic или другие внешние сервисы",
+        "gdpr_compliance": "Возможность полного удаления данных контакта"
+      }
+    },
+
+    "deployment_and_scaling": {
+      "containerization": {
+        "platform": "Docker + Docker Compose",
+        "services": ["rails", "sidekiq", "vite", "postgres", "redis", "mailhog", "ollama"],
+        "orchestration": "Docker Compose для разработки, Kubernetes для продакшена"
+      },
+
+      "scaling_strategies": {
+        "horizontal_scaling": {
+          "rails": "Множественные инстансы за load balancer",
+          "sidekiq": "Множественные воркеры с различными очередями",
+          "postgres": "Read replicas для отчетов",
+          "redis": "Redis Cluster для больших нагрузок"
+        },
+
+        "vertical_scaling": {
+          "ollama": "Требует GPU для оптимальной производительности (особенно qwen2.5:14b)",
+          "postgres": "Увеличение RAM для кэширования индексов",
+          "redis": "Увеличение памяти для больших очередей"
+        }
+      },
+
+      "monitoring": {
+        "application_performance": "APM инструменты (New Relic, DataDog)",
+        "logs": "Centralized logging (ELK stack)",
+        "metrics": "Prometheus + Grafana",
+        "errors": "Sentry для error tracking"
+      },
+
+      "backup_and_recovery": {
+        "database_backups": "Автоматические ежедневные бэкапы PostgreSQL",
+        "retention_policy": "30 дней",
+        "disaster_recovery": "Point-in-time recovery",
+        "file_storage_backup": "S3-compatible storage для вложений"
+      }
+    },
+
+    "development_workflow": {
+      "version_control": "Git + GitHub",
+      "branching_strategy": "Git Flow",
+      "ci_cd": {
+        "platform": "GitHub Actions / CircleCI",
+        "pipeline": [
+          "1. Lint Ruby (RuboCop)",
+          "2. Lint JS/Vue (ESLint)",
+          "3. Run Ruby tests (RSpec)",
+          "4. Run JS tests (Vitest)",
+          "5. Build Docker images",
+          "6. Deploy to staging",
+          "7. Automated tests on staging",
+          "8. Manual approval",
+          "9. Deploy to production"
+        ]
+      },
+
+      "testing": {
+        "backend": {
+          "framework": "RSpec",
+          "coverage": "SimpleCov",
+          "types": ["Unit tests", "Integration tests", "Request specs"]
+        },
+        "frontend": {
+          "framework": "Vitest",
+          "component_testing": "Vue Test Utils",
+          "e2e": "Playwright"
+        }
+      },
+
+      "code_quality": {
+        "ruby_linting": "RuboCop with custom config",
+        "js_linting": "ESLint (Airbnb + Vue rules)",
+        "pre_commit_hooks": "Husky + lint-staged",
+        "code_review": "Mandatory PR reviews"
+      }
+    },
+
+    "performance_optimizations": {
+      "database": [
+        "Правильные индексы на часто запрашиваемых колонках",
+        "N+1 query prevention через includes/joins",
+        "Database connection pooling",
+        "Prepared statements",
+        "EXPLAIN ANALYZE для оптимизации запросов"
+      ],
+
+      "caching": [
+        "Fragment caching для частей UI",
+        "Russian doll caching",
+        "Redis cache для дорогих вычислений",
+        "Browser caching для статики",
+        "CDN для ассетов в продакшене"
+      ],
+
+      "frontend": [
+        "Code splitting по роутам",
+        "Lazy loading компонентов",
+        "Debouncing для поисковых запросов",
+        "Virtual scrolling для длинных списков",
+        "Image lazy loading",
+        "Compression (Gzip/Brotli)"
+      ],
+
+      "ai_optimizations": [
+        "Кэширование embeddings документов",
+        "Batch processing для векторизации",
+        "Оптимизация размера контекста для ИИ",
+        "Асинхронная генерация ответов",
+        "GPU acceleration для Ollama (если доступно)"
+      ]
+    },
+
+    "future_enhancements": {
+      "planned_features": [
+        "Мультимодальный ИИ (анализ изображений)",
+        "Voice messages поддержка",
+        "Видео звонки в веб-виджете",
+        "Расширенная аналитика с ML предсказаниями",
+        "Персонализированные рекомендации для агентов",
+        "Автоматическая категоризация разговоров",
+        "Интеграция с CRM системами (Salesforce, HubSpot)",
+        "Mobile приложения (iOS, Android)",
+        "Advanced workflow automation",
+        "Custom AI model fine-tuning на собственных данных"
+      ]
+    }
+  }
+}

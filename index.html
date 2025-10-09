@@ -2,28 +2,34 @@
 <html>
 
 <head>
-	<title>Тестирование виджета</title>
+	<title>Test</title>
 </head>
 
 <body>
-	<h1>Тестовая страничка</h1>
+	<h1>Test</h1>
 
 	<!-- Вставьте код виджета сюда -->
-	<script>
+<script>
   (function(d,t) {
-    var BASE_URL="http://localhost:3000";
+    var BASE_URL="http://172.16.0.188:3000";
     var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
     g.src=BASE_URL+"/packs/js/sdk.js";
     g.async = true;
     s.parentNode.insertBefore(g,s);
     g.onload=function(){
       window.chatwootSDK.run({
-        websiteToken: 'bQowLSZThdDRqEk6AtiHwMAa',
+        websiteToken: 'NNC1qMT8eua9KkSSEAXk9iFA',
         baseUrl: BASE_URL
       })
     }
   })(document,"script");
 </script>
+
+
+
+
+
+
 
 
 

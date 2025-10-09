@@ -585,7 +585,7 @@ docker compose exec vite pnpm install --force
 - Обновление документации при необходимости
 
 ### Локализация
-- Переводы управляются через [Crowdin](https://translate.chatwoot.com)
+- Переводы управляются через систему локализации
 - Обновляйте только `config/locales/en.yml` и `app/javascript/dashboard/i18n/locale/en.json`
 - Другие языки обновляются сообществом
 

@@ -444,3 +444,34 @@ ACTIVE_STORAGE_VARIANT_PROCESSOR=vips
 
 
 sudo systemctl stop hiddify-redis.service
+
+
+Давайте зайдем в Rails консоль и обновим значение в базе данных:
+
+● Bash(sudo docker-compose exec rails bundle exec rails console) timeout: 5m 0s
+  ⎿  Interrupted · What should Claude do instead?
+
+> зашел что дальше 
+
+● Выполните эти команды в Rails консоли:
+
+  # Найти запись BRAND_NAME
+  config = InstallationConfig.find_by(name: 'BRAND_NAME')
+
+  # Посмотреть текущее значение
+  config.value
+
+  # Обновить значение
+  config.update(value: 'СпросиИИ')
+
+  # Проверить, что изменилось
+  config.value
+
+  # Также можно обновить INSTALLATION_NAME если нужно
+  installation = InstallationConfig.find_by(name: 'INSTALLATION_NAME')
+  installation.update(value: 'СпросиИИ')
+
+  # Выйти
+  exit
+
+  После этого перезагрузите страницу в браузере с очисткой кэша (Ctrl+Shift+R).
