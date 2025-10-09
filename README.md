@@ -86,31 +86,44 @@
 Смотрите наши обучающие видео для быстрого знакомства с платформой СпросиИИ:
 
 ### 📺 Обзор платформы
-<video src="./video/Видео обзор СпросиИИ.mp4" width="100%" controls></video>
+
+<video src="https://github.com/Saaayurii/AskII/raw/develop/video/platform-overview.mp4" controls width="100%"></video>
 
 Полный обзор возможностей платформы СпросиИИ: интерфейс, основные функции, омниканальная поддержка и инструменты для работы с клиентами.
 
+---
+
 ### 🔐 Авторизация и первый вход
-<video src="./video/АвторизацияСпросиИИ.mp4" width="100%" controls></video>
+
+<video src="https://github.com/Saaayurii/AskII/raw/develop/video/authorization.mp4" controls width="100%"></video>
 
 Пошаговое руководство по регистрации, авторизации и первоначальной настройке вашего аккаунта в СпросиИИ.
 
+---
+
 ### 🔌 Интеграция с внешними сервисами
-<video src="./video/Интеграция СпросиИИ.mp4" width="100%" controls></video>
+
+<video src="https://github.com/Saaayurii/AskII/raw/develop/video/integrations.mp4" controls width="100%"></video>
 
 Подключение каналов связи (Email, социальные сети, мессенджеры) и интеграция с внешними сервисами для создания единого центра коммуникации.
 
+---
+
 ### 🤖 Применение искусственного интеллекта
-<video src="./video/Применение ИИ в СпросиИИ.mp4" width="100%" controls></video>
+
+<video src="https://github.com/Saaayurii/AskII/raw/develop/video/ai-features.mp4" controls width="100%"></video>
 
 Использование локального ИИ-помощника Captain для автоматизации ответов, резюмирования разговоров, улучшения текста и предложения меток.
 
+---
+
 ### 📚 Публикация статей в базе знаний
-<video src="./video/Публикация статей в СпросиИИ.mp4" width="100%" controls></video>
+
+<video src="https://github.com/Saaayurii/AskII/raw/develop/video/knowledge-base.mp4" controls width="100%"></video>
 
 Создание и публикация статей справки, организация базы знаний и настройка портала самообслуживания для клиентов.
 
-> **Примечание**: Видео находятся в директории `/video` проекта. При развертывании убедитесь, что они доступны через веб-сервер.
+> **Примечание**: Видео также доступны в директории [`/video`](./video) проекта.
 
 ---
 
