@@ -4,18 +4,6 @@
 
 **СпросиИИ** — это современная платформа поддержки клиентов с интеграцией локального искусственного интеллекта, основанная на Chatwoot. Проект представляет собой open-source альтернативу Intercom, Zendesk и Salesforce Service Cloud с встроенной поддержкой локальных ИИ моделей через Ollama.
 
-<p>
-  <img src="https://img.shields.io/badge/Ruby-3.2+-red?style=flat&logo=ruby" alt="Ruby Version">
-  <img src="https://img.shields.io/badge/Node.js-23.x-green?style=flat&logo=node.js" alt="Node.js Version">
-  <img src="https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=flat&logo=vue.js" alt="Vue.js Version">
-  <img src="https://img.shields.io/badge/PostgreSQL-16+-336791?style=flat&logo=postgresql" alt="PostgreSQL Version">
-  <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=flat&logo=docker" alt="Docker Ready">
-  <img src="https://img.shields.io/badge/AI-Qwen2.5-FF6B35?style=flat" alt="AI Support">
-  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
-</p>
-
-<img src="./.github/screenshots/dashboard.png#gh-light-mode-only" width="100%" alt="Панель управления СпросиИИ"/>
-<img src="./.github/screenshots/dashboard-dark.png#gh-dark-mode-only" width="100%" alt="Панель управления СпросиИИ - тёмная тема"/>
 
 ---
 
