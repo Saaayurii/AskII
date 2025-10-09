@@ -4,7 +4,15 @@
 
 **СпросиИИ** — это современная платформа поддержки клиентов с интеграцией локального искусственного интеллекта, основанная на Chatwoot. Проект представляет собой open-source альтернативу Intercom, Zendesk и Salesforce Service Cloud с встроенной поддержкой локальных ИИ моделей через Ollama.
 
-
+<p>
+  <img src="https://img.shields.io/badge/Ruby-3.2+-red?style=flat&logo=ruby" alt="Ruby Version">
+  <img src="https://img.shields.io/badge/Node.js-23.x-green?style=flat&logo=node.js" alt="Node.js Version">
+  <img src="https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=flat&logo=vue.js" alt="Vue.js Version">
+  <img src="https://img.shields.io/badge/PostgreSQL-16+-336791?style=flat&logo=postgresql" alt="PostgreSQL Version">
+  <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=flat&logo=docker" alt="Docker Ready">
+  <img src="https://img.shields.io/badge/AI-Qwen2.5-FF6B35?style=flat" alt="AI Support">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
+</p>
 ---
 
 ## 🎯 Основные возможности
@@ -78,31 +86,31 @@
 Смотрите наши обучающие видео для быстрого знакомства с платформой СпросиИИ:
 
 ### 📺 Обзор платформы
-<video src="./public/video/Видео обзор СпросиИИ.mp4" width="100%" controls></video>
+<video src="./video/Видео обзор СпросиИИ.mp4" width="100%" controls></video>
 
 Полный обзор возможностей платформы СпросиИИ: интерфейс, основные функции, омниканальная поддержка и инструменты для работы с клиентами.
 
 ### 🔐 Авторизация и первый вход
-<video src="./public/video/АвторизацияСпросиИИ.mp4" width="100%" controls></video>
+<video src="./video/АвторизацияСпросиИИ.mp4" width="100%" controls></video>
 
 Пошаговое руководство по регистрации, авторизации и первоначальной настройке вашего аккаунта в СпросиИИ.
 
 ### 🔌 Интеграция с внешними сервисами
-<video src="./public/video/Интеграция СпросиИИ.mp4" width="100%" controls></video>
+<video src="./video/Интеграция СпросиИИ.mp4" width="100%" controls></video>
 
 Подключение каналов связи (Email, социальные сети, мессенджеры) и интеграция с внешними сервисами для создания единого центра коммуникации.
 
 ### 🤖 Применение искусственного интеллекта
-<video src="./public/video/Применение ИИ в СпросиИИ.mp4" width="100%" controls></video>
+<video src="./video/Применение ИИ в СпросиИИ.mp4" width="100%" controls></video>
 
 Использование локального ИИ-помощника Captain для автоматизации ответов, резюмирования разговоров, улучшения текста и предложения меток.
 
 ### 📚 Публикация статей в базе знаний
-<video src="./public/video/Публикация статей в СпросиИИ.mp4" width="100%" controls></video>
+<video src="./video/Публикация статей в СпросиИИ.mp4" width="100%" controls></video>
 
 Создание и публикация статей справки, организация базы знаний и настройка портала самообслуживания для клиентов.
 
-> **Примечание**: Видео находятся в директории `/public/video` проекта. При развертывании убедитесь, что они доступны через веб-сервер.
+> **Примечание**: Видео находятся в директории `/video` проекта. При развертывании убедитесь, что они доступны через веб-сервер.
 
 ---
 
