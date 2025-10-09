@@ -1,9 +1,6 @@
 # СпросиИИ (AskII) 🤖💬
 
-<img src="./.github/screenshots/header.png#gh-light-mode-only" width="100%" alt="СпросиИИ - светлая тема"/>
-<img src="./.github/screenshots/header-dark.png#gh-dark-mode-only" width="100%" alt="СпросиИИ - тёмная тема"/>
 
----
 
 **СпросиИИ** — это современная платформа поддержки клиентов с интеграцией локального искусственного интеллекта, основанная на Chatwoot. Проект представляет собой open-source альтернативу Intercom, Zendesk и Salesforce Service Cloud с встроенной поддержкой локальных ИИ моделей через Ollama.
 
