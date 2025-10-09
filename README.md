@@ -87,6 +87,10 @@
 
 ### 📺 Обзор платформы
 
+https://github.com/user-attachments/assets/af47c745-1b8b-4d42-96df-524c82a62eda
+
+
+
 <video src="https://github.com/Saaayurii/AskII/blob/develop/video/platform-overview.mp4" controls width="100%"></video>
 
 Полный обзор возможностей платформы СпросиИИ: интерфейс, основные функции, омниканальная поддержка и инструменты для работы с клиентами.
@@ -94,6 +98,10 @@
 ---
 
 ### 🔐 Авторизация и первый вход
+
+https://github.com/user-attachments/assets/f9941597-d1d2-4713-a5ad-a8e5f4d5cef0
+
+
 
 <video src="https://github.com/Saaayurii/AskII/blob/develop/video/authorization.mp4" controls width="100%"></video>
 
@@ -103,6 +111,10 @@
 
 ### 🔌 Интеграция с внешними сервисами
 
+
+https://github.com/user-attachments/assets/da452837-cbc6-4546-90a0-cb3b0b71d8e9
+
+
 <video src="https://github.com/Saaayurii/AskII/blob/develop/video/integrations.mp4" controls width="100%"></video>
 
 Подключение каналов связи (Email, социальные сети, мессенджеры) и интеграция с внешними сервисами для создания единого центра коммуникации.
@@ -111,6 +123,10 @@
 
 ### 🤖 Применение искусственного интеллекта
 
+
+https://github.com/user-attachments/assets/a3df80fe-e169-4cef-a50e-b18f0516ee78
+
+
 <video src="https://github.com/Saaayurii/AskII/blob/develop/video/ai-features.mp4" controls width="100%"></video>
 
 Использование локального ИИ-помощника Captain для автоматизации ответов, резюмирования разговоров, улучшения текста и предложения меток.
@@ -118,6 +134,10 @@
 ---
 
 ### 📚 Публикация статей в базе знаний
+
+
+https://github.com/user-attachments/assets/21bf931c-fc6a-43ec-bd04-01c68efbd7b2
+
 
 <video src="https://github.com/Saaayurii/AskII/blob/develop/video/knowledge-base.mp4" controls width="100%"></video>
 
