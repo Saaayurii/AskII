@@ -1,12 +1,12 @@
 {
   "openapi": "3.0.4",
   "info": {
-    "title": "Chatwoot",
-    "description": "This is the API documentation for Chatwoot server.",
+    "title": "СпросиИИ (AskII)",
+    "description": "This is the API documentation for СпросиИИ (AskII) server - AI-powered customer support platform.",
     "version": "1.1.0",
-    "termsOfService": "https://www.chatwoot.com/terms-of-service/",
+    "termsOfService": "https://askii.ru/terms-of-service/",
     "contact": {
-      "email": "hello@chatwoot.com"
+      "email": "hello@askii.ru"
     },
     "license": {
       "name": "MIT License",
@@ -15,7 +15,7 @@
   },
   "servers": [
     {
-      "url": "https://app.chatwoot.com/"
+      "url": "https://app.askii.ru/"
     }
   ],
   "paths": {
