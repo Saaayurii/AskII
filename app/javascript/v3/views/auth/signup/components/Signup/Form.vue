@@ -193,7 +193,7 @@ export default {
         />
         <span
           v-if="!hasAValidCaptcha && didCaptchaReset"
-          class="text-xs text-n-ruby-9"
+          class="text-xs text-red-300"
         >
           {{ $t('SET_NEW_PASSWORD.CAPTCHA.ERROR') }}
         </span>
@@ -202,7 +202,7 @@ export default {
         lg
         type="submit"
         data-testid="submit_button"
-        class="w-full"
+        class="w-full !bg-gradient-to-r !from-blue-500 !to-purple-600 !text-white !font-semibold !rounded-xl !shadow-lg !backdrop-blur-sm hover:!from-blue-600 hover:!to-purple-700 hover:!shadow-xl !transition-all !duration-300 hover:!scale-[1.02] active:!scale-[0.98] disabled:!opacity-50 disabled:!cursor-not-allowed"
         icon="i-lucide-chevron-right"
         trailing-icon
         :label="$t('REGISTER.SUBMIT')"
@@ -214,7 +214,7 @@ export default {
       {{ $t('REGISTER.OAUTH.GOOGLE_SIGNUP') }}
     </GoogleOAuthButton>
     <p
-      class="text-sm mb-1 mt-5 text-n-slate-12 [&>a]:text-n-brand [&>a]:font-medium [&>a]:hover:brightness-110"
+      class="text-sm mb-1 mt-5 text-white/80 [&>a]:text-blue-300 [&>a]:font-medium [&>a]:hover:text-blue-100 [&>a]:transition-colors"
       v-html="termsLink"
     />
   </div>

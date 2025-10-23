@@ -45,10 +45,10 @@ export default {
   <div class="flex flex-col">
     <a
       :href="getGoogleAuthUrl()"
-      class="inline-flex justify-center w-full px-4 py-3 bg-n-background dark:bg-n-solid-3 rounded-md shadow-sm ring-1 ring-inset ring-n-container dark:ring-n-container focus:outline-offset-0 hover:bg-n-alpha-2 dark:hover:bg-n-alpha-2"
+      class="inline-flex justify-center items-center w-full px-4 py-3.5 bg-white/20 backdrop-blur-md rounded-xl shadow-lg ring-2 ring-white/30 focus:outline-none hover:bg-white/25 hover:ring-white/50 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
     >
-      <span class="i-logos-google-icon h-6" />
-      <span class="ml-2 text-base font-medium text-n-slate-12">
+      <span class="i-logos-google-icon h-6 w-6" />
+      <span class="ml-3 text-base font-semibold text-white">
         {{ $t('LOGIN.OAUTH.GOOGLE_LOGIN') }}
       </span>
     </a>

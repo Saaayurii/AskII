@@ -6,11 +6,13 @@ import FormInput from '../../../components/Form/Input.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
 import { DEFAULT_REDIRECT_URL } from 'dashboard/constants/globals';
 import { setNewPassword } from '../../../api/auth';
+import SpaceBackground from '../../../components/SpaceBackground.vue';
 
 export default {
   components: {
     FormInput,
     NextButton,
+    SpaceBackground,
   },
   props: {
     resetPasswordToken: { type: String, default: '' },
@@ -87,14 +89,15 @@ export default {
 
 <template>
   <div
-    class="flex flex-col justify-center w-full min-h-screen py-12 bg-n-brand/5 dark:bg-n-background sm:px-6 lg:px-8"
+    class="relative flex flex-col justify-center w-full min-h-screen py-12 overflow-hidden sm:px-6 lg:px-8"
   >
+    <SpaceBackground />
     <form
-      class="bg-white shadow sm:mx-auto sm:w-full sm:max-w-lg dark:bg-n-solid-2 p-11 sm:shadow-lg sm:rounded-lg"
+      class="relative z-10 backdrop-blur-2xl bg-gradient-to-br from-white/15 to-white/5 border border-white/30 shadow-2xl sm:mx-auto sm:w-full sm:max-w-lg p-12 sm:rounded-3xl before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-br before:from-white/10 before:to-transparent before:opacity-50 before:-z-10"
       @submit.prevent="submitForm"
     >
       <h1
-        class="mb-1 text-2xl font-medium tracking-tight text-left text-n-slate-12"
+        class="mb-6 text-3xl font-bold tracking-tight text-left text-white drop-shadow-lg"
       >
         {{ $t('SET_NEW_PASSWORD.TITLE') }}
       </h1>
@@ -102,9 +105,9 @@ export default {
       <div class="space-y-5">
         <FormInput
           v-model="credentials.password"
-          class="mt-3"
           name="password"
           type="password"
+          :label="$t('SET_NEW_PASSWORD.PASSWORD.LABEL')"
           :has-error="v$.credentials.password.$error"
           :error-message="$t('SET_NEW_PASSWORD.PASSWORD.ERROR')"
           :placeholder="$t('SET_NEW_PASSWORD.PASSWORD.PLACEHOLDER')"
@@ -112,9 +115,9 @@ export default {
         />
         <FormInput
           v-model="credentials.confirmPassword"
-          class="mt-3"
           name="confirm_password"
           type="password"
+          :label="$t('SET_NEW_PASSWORD.CONFIRM_PASSWORD.LABEL')"
           :has-error="v$.credentials.confirmPassword.$error"
           :error-message="$t('SET_NEW_PASSWORD.CONFIRM_PASSWORD.ERROR')"
           :placeholder="$t('SET_NEW_PASSWORD.CONFIRM_PASSWORD.PLACEHOLDER')"
@@ -124,7 +127,7 @@ export default {
           lg
           type="submit"
           data-testid="submit_button"
-          class="w-full"
+          class="w-full !bg-gradient-to-r !from-blue-500 !to-purple-600 !text-white !font-semibold !rounded-xl !shadow-lg !backdrop-blur-sm hover:!from-blue-600 hover:!to-purple-700 hover:!shadow-xl !transition-all !duration-300 hover:!scale-[1.02] active:!scale-[0.98] disabled:!opacity-50 disabled:!cursor-not-allowed"
           :label="$t('SET_NEW_PASSWORD.SUBMIT')"
           :disabled="
             v$.credentials.password.$invalid ||

@@ -14,8 +14,8 @@ defineProps({
     <label
       v-if="label"
       :for="name"
-      class="flex justify-between text-sm font-medium leading-6 text-n-slate-12"
-      :class="{ 'text-n-ruby-12': hasError }"
+      class="flex justify-between text-sm font-medium leading-6 text-white"
+      :class="{ 'text-red-300': hasError }"
     >
       <slot name="label">
         {{ label }}
@@ -34,13 +34,13 @@ defineProps({
       </div>
       <div
         v-if="errorMessage && hasError"
-        class="text-sm mt-1.5 ml-px text-n-ruby-9 leading-tight"
+        class="text-sm mt-1.5 ml-px text-red-300 leading-tight"
       >
         {{ errorMessage }}
       </div>
       <div
         v-else-if="helpMessage || $slots.help"
-        class="text-sm mt-1.5 ml-px text-n-slate-10 leading-tight"
+        class="text-sm mt-1.5 ml-px text-white/70 leading-tight"
       >
         <slot name="help">
           {{ helpMessage }}

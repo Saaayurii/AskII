@@ -16,6 +16,8 @@ import GoogleOAuthButton from '../../components/GoogleOauth/Button.vue';
 import Spinner from 'shared/components/Spinner.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
 import BatAnimation from '../../components/BatAnimation.vue';
+import SpaceBackground from '../../components/SpaceBackground.vue';
+import FloatingParticles from '../../components/FloatingParticles.vue';
 
 const ERROR_MESSAGES = {
   'no-account-found': 'LOGIN.OAUTH.NO_ACCOUNT_FOUND',
@@ -31,6 +33,8 @@ export default {
     Spinner,
     NextButton,
     BatAnimation,
+    SpaceBackground,
+    FloatingParticles,
   },
   props: {
     ssoAuthToken: { type: String, default: '' },
@@ -174,25 +178,25 @@ export default {
 </script>
 
 <template>
-  <main
-    class="flex flex-col w-full min-h-screen py-20 bg-n-brand/5 dark:bg-n-background sm:px-6 lg:px-8"
-  >
-    <section class="max-w-5xl mx-auto">
-      <div class="h-32">
+  <main class="relative flex flex-col w-full min-h-screen py-20 overflow-hidden sm:px-6 lg:px-8">
+    <SpaceBackground />
+    <FloatingParticles />
+    <section class="relative z-10 max-w-5xl mx-auto animate-fade-in-up">
+      <div class="h-32 flex items-center justify-center animate-float">
         <BatAnimation />
       </div>
-      <h2 class="mt-6 text-3xl font-medium text-center text-n-slate-12">
+      <h2 class="mt-6 text-4xl font-bold text-center text-white drop-shadow-2xl bg-gradient-to-r from-blue-200 via-white to-purple-200 bg-clip-text text-transparent animate-fade-in-up animation-delay-200">
         {{ replaceInstallationName($t('LOGIN.TITLE')) }}
       </h2>
-      <p v-if="showSignupLink" class="mt-3 text-sm text-center text-n-slate-11">
+      <p v-if="showSignupLink" class="mt-4 text-base text-center text-white/90 drop-shadow-lg animate-fade-in-up animation-delay-400">
         {{ $t('COMMON.OR') }}
-        <router-link to="auth/signup" class="lowercase text-link text-n-brand">
+        <router-link to="auth/signup" class="lowercase text-blue-300 hover:text-blue-100 transition-all duration-300 font-medium underline decoration-blue-300/50 hover:decoration-blue-100 underline-offset-4 hover:scale-105 inline-block">
           {{ $t('LOGIN.CREATE_NEW_ACCOUNT') }}
         </router-link>
       </p>
     </section>
     <section
-      class="bg-white shadow sm:mx-auto mt-11 sm:w-full sm:max-w-lg dark:bg-n-solid-2 p-11 sm:shadow-lg sm:rounded-lg"
+      class="relative z-10 backdrop-blur-2xl bg-gradient-to-br from-white/15 to-white/5 border border-white/30 shadow-2xl sm:mx-auto mt-11 sm:w-full sm:max-w-lg p-12 sm:rounded-3xl before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-br before:from-white/10 before:to-transparent before:opacity-50 before:-z-10 animate-fade-in-up animation-delay-600 hover:shadow-3xl transition-shadow duration-500"
       :class="{
         'mb-8 mt-15': !showGoogleOAuth,
         'animate-wiggle': loginApi.hasErrored,
@@ -231,7 +235,7 @@ export default {
                 <p v-if="!globalConfig.disableUserProfileUpdate">
                   <router-link
                     to="auth/reset/password"
-                    class="text-sm text-link"
+                    class="text-sm text-blue-300 hover:text-blue-200 transition-colors"
                     tabindex="4"
                   >
                     {{ $t('LOGIN.FORGOT_PASSWORD') }}
@@ -241,7 +245,7 @@ export default {
             </FormInput>
             <button
               type="button"
-              class="absolute right-3 top-[42px] text-n-slate-10 hover:text-n-slate-11 transition-colors"
+              class="absolute right-3 top-[42px] text-white/60 hover:text-white transition-colors"
               @click="togglePasswordVisibility"
               :tabindex="5"
               :aria-label="showPassword ? 'Hide password' : 'Show password'"
@@ -288,7 +292,7 @@ export default {
             lg
             type="submit"
             data-testid="submit_button"
-            class="w-full"
+            class="w-full !bg-gradient-to-r !from-blue-500 !to-purple-600 !text-white !font-semibold !rounded-xl !shadow-lg !backdrop-blur-sm hover:!from-blue-600 hover:!to-purple-700 hover:!shadow-xl !transition-all !duration-300 hover:!scale-[1.02] active:!scale-[0.98] disabled:!opacity-50 disabled:!cursor-not-allowed"
             :tabindex="3"
             :label="$t('LOGIN.SUBMIT')"
             :disabled="loginApi.showLoading"

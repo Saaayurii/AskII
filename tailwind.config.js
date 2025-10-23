@@ -216,6 +216,26 @@ const tailwindConfig = {
         '0%': { opacity: 0, transform: 'translateY(0.5rem)' },
         '100%': { opacity: 1, transform: 'translateY(0)' },
       },
+      'fade-in': {
+        '0%': { opacity: 0 },
+        '100%': { opacity: 1 },
+      },
+      'scale-in': {
+        '0%': { opacity: 0, transform: 'scale(0.95)' },
+        '100%': { opacity: 1, transform: 'scale(1)' },
+      },
+      'float': {
+        '0%, 100%': { transform: 'translateY(0)' },
+        '50%': { transform: 'translateY(-10px)' },
+      },
+      'glow': {
+        '0%, 100%': { boxShadow: '0 0 5px rgba(59, 130, 246, 0.5), 0 0 20px rgba(147, 51, 234, 0.3)' },
+        '50%': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.8), 0 0 40px rgba(147, 51, 234, 0.6)' },
+      },
+      'pulse-slow': {
+        '0%, 100%': { opacity: 1 },
+        '50%': { opacity: 0.7 },
+      },
       'loader-pulse': {
         '0%': { opacity: 0.4 },
         '50%': { opacity: 1 },
@@ -240,6 +260,11 @@ const tailwindConfig = {
       ...defaultTheme.animation,
       wiggle: 'wiggle 0.5s ease-in-out',
       'fade-in-up': 'fade-in-up 0.3s ease-out',
+      'fade-in': 'fade-in 0.5s ease-out',
+      'scale-in': 'scale-in 0.3s ease-out',
+      'float': 'float 3s ease-in-out infinite',
+      'glow': 'glow 2s ease-in-out infinite',
+      'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
       'loader-pulse': 'loader-pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       'card-select': 'card-select 0.25s ease-in-out',
       shake: 'shake 0.3s ease-in-out 0s 2',
@@ -261,6 +286,35 @@ const tailwindConfig = {
         ]),
       },
     }),
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.animation-delay-100': {
+          'animation-delay': '100ms',
+        },
+        '.animation-delay-200': {
+          'animation-delay': '200ms',
+        },
+        '.animation-delay-300': {
+          'animation-delay': '300ms',
+        },
+        '.animation-delay-400': {
+          'animation-delay': '400ms',
+        },
+        '.animation-delay-500': {
+          'animation-delay': '500ms',
+        },
+        '.animation-delay-600': {
+          'animation-delay': '600ms',
+        },
+        '.animation-delay-700': {
+          'animation-delay': '700ms',
+        },
+        '.animation-delay-800': {
+          'animation-delay': '800ms',
+        },
+      };
+      addUtilities(newUtilities);
+    },
   ],
 };
 

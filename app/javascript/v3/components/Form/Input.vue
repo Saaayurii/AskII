@@ -56,15 +56,15 @@ const model = defineModel({
       v-bind="$attrs"
       v-model="model"
       :type="type"
-      class="block w-full border-none rounded-md shadow-sm bg-n-alpha-black2 appearance-none outline outline-1 focus:outline focus:outline-1 text-n-slate-12 placeholder:text-n-slate-10 sm:text-sm sm:leading-6 px-3 py-3"
+      class="block w-full border-none rounded-xl shadow-lg backdrop-blur-md bg-white/10 appearance-none outline-none ring-2 text-white placeholder:text-white/50 sm:text-sm sm:leading-6 px-4 py-3.5 transition-all duration-300 focus:scale-[1.02] animate-scale-in"
       :class="{
-        'error outline-n-ruby-8 dark:outline-n-ruby-8 hover:outline-n-ruby-9 dark:hover:outline-n-ruby-9 disabled:outline-n-ruby-8 dark:disabled:outline-n-ruby-8':
+        'ring-red-400/50 bg-red-500/10 focus:ring-red-400 animate-shake':
           hasError,
-        'outline-n-weak dark:outline-n-weak hover:outline-n-slate-6 dark:hover:outline-n-slate-6 focus:outline-n-brand dark:focus:outline-n-brand':
+        'ring-white/20 hover:ring-white/40 focus:ring-blue-400/60 focus:bg-white/15 focus:shadow-xl focus:shadow-blue-500/20':
           !hasError,
-        'px-3 py-3': spacing === 'base',
-        'px-3 py-2 mb-0': spacing === 'compact',
-        'pl-9': icon,
+        'px-4 py-3.5': spacing === 'base',
+        'px-4 py-2.5 mb-0': spacing === 'compact',
+        'pl-10': icon,
       }"
     />
   </WithLabel>
