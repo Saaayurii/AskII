@@ -69,7 +69,7 @@ const togglePasswordVisibility = () => {
       v-bind="$attrs"
       v-model="model"
       :type="currentInputType"
-      class="block w-full border-none rounded-xl shadow-lg backdrop-blur-md bg-white/10 appearance-none outline-none ring-2 text-white placeholder:text-white/50 sm:text-sm sm:leading-6 px-4 py-3.5 transition-all duration-300 focus:scale-[1.02] animate-scale-in"
+      class="block w-full border-none rounded-xl shadow-lg backdrop-blur-md bg-white/10 appearance-none outline-none ring-2 text-white placeholder:text-white/50 sm:text-sm sm:leading-6 px-4 py-3.5 transition-all duration-200"
       :class="{
         'ring-red-400/50 bg-red-500/10 focus:ring-red-400 animate-shake':
           hasError,
