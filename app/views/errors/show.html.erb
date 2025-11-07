@@ -1,0 +1,143 @@
+<style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 0.4s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  .animation-delay-600 {
+    animation-delay: 0.6s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  .space-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #0f172a, #1e1b4b, #312e81);
+    z-index: 0;
+  }
+
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite;
+  }
+
+  .error-icon {
+    font-size: 8rem;
+    line-height: 1;
+    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+</style>
+
+<div class="space-background"></div>
+
+<% 30.times do %>
+  <div class="star" style="
+    width: <%= rand(1..3) %>px;
+    height: <%= rand(1..3) %>px;
+    top: <%= rand(0..100) %>%;
+    left: <%= rand(0..100) %>%;
+    animation-duration: <%= rand(2..5) %>s;
+    animation-delay: <%= rand(0..3) %>s;
+  "></div>
+<% end %>
+
+<main class="relative flex flex-col w-full min-h-screen py-20 overflow-hidden sm:px-6 lg:px-8">
+  <section class="relative z-10 max-w-5xl mx-auto animate-fade-in-up">
+    <div class="h-32 flex items-center justify-center animate-float">
+      <% logo_url = GlobalConfig.get_value('LOGO') || GlobalConfig.get_value('LOGO_THUMBNAIL') %>
+      <% if logo_url.present? %>
+        <img src="<%= logo_url %>" alt="Logo" class="h-20 w-auto drop-shadow-2xl">
+      <% else %>
+        <div class="error-icon">⚠️</div>
+      <% end %>
+    </div>
+
+    <h1 class="mt-6 text-9xl font-bold text-center text-white drop-shadow-2xl bg-gradient-to-r from-blue-200 via-white to-purple-200 bg-clip-text text-transparent animate-fade-in-up animation-delay-200">
+      <%= @error_code %>
+    </h1>
+
+    <h2 class="mt-6 text-4xl font-bold text-center text-white drop-shadow-2xl bg-gradient-to-r from-blue-200 via-white to-purple-200 bg-clip-text text-transparent animate-fade-in-up animation-delay-400">
+      <%= @error_title %>
+    </h2>
+
+    <p class="mt-4 text-base text-center text-white/90 drop-shadow-lg animate-fade-in-up animation-delay-600">
+      <%= @error_description %>
+    </p>
+  </section>
+
+  <section class="relative z-10 backdrop-blur-2xl bg-gradient-to-br from-white/15 to-white/5 border border-white/30 shadow-2xl sm:mx-auto mt-11 sm:w-full sm:max-w-lg p-12 sm:rounded-3xl before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-br before:from-white/10 before:to-transparent before:opacity-50 before:-z-10 animate-fade-in-up animation-delay-600 hover:shadow-3xl transition-shadow duration-500">
+    <div class="flex flex-col gap-4">
+      <a
+        href="/app"
+        class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-4 text-base font-semibold text-white shadow-lg backdrop-blur-sm hover:from-blue-600 hover:to-purple-700 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+      >
+        <%= I18n.t('errors.actions.go_home') %>
+      </a>
+
+      <button
+        onclick="window.history.back()"
+        class="inline-flex items-center justify-center rounded-xl border-2 border-white/30 bg-white/10 px-6 py-4 text-base font-semibold text-white backdrop-blur-sm hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+      >
+        <%= I18n.t('errors.actions.go_back') %>
+      </button>
+    </div>
+
+    <% if @error_code == 500 %>
+      <div class="mt-6 rounded-xl bg-yellow-500/20 border border-yellow-500/30 p-4 backdrop-blur-sm">
+        <p class="text-sm text-yellow-100 text-center">
+          <%= I18n.t('errors.internal_server_error.help_text') %>
+        </p>
+      </div>
+    <% end %>
+  </section>
+</main>

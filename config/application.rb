@@ -68,6 +68,9 @@ module Chatwoot
 
     # Disable PDF/video preview generation as we don't use them
     config.active_storage.previewers = []
+
+    # Use custom error pages
+    config.exceptions_app = routes
   end
 
   def self.config

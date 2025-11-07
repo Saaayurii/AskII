@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      <%= @error_code %> - <%= GlobalConfig.get_value('INSTALLATION_NAME') || 'СпросиИИ' %>
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <%= csrf_meta_tags %>
+    <%= vite_client_tag %>
+    <%= vite_stylesheet_tag 'app/javascript/dashboard/assets/scss/tailwind.scss' %>
+  </head>
+  <body class="bg-slate-25 text-slate-700">
+    <%= yield %>
+  </body>
+</html>
