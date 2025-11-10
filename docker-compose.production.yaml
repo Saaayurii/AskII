@@ -2,7 +2,13 @@ version: '3'
 
 services:
   base: &base
-    image: chatwoot/chatwoot:latest
+    # Use local build instead of pre-built image to include custom error pages
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        RAILS_ENV: production
+    image: askii-custom:latest
     env_file: .env ## Change this file for customized env variables
     volumes:
       - storage_data:/app/storage
