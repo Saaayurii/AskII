@@ -22,25 +22,18 @@ services:
       dockerfile: ./docker/dockerfiles/rails.Dockerfile
     image: chatwoot-rails:development
     volumes:
-      - ./:/app:delegated
-      - node_modules:/app/node_modules
-      - packs:/app/public/packs
-      - cache:/app/tmp/cache
-      - bundle:/usr/local/bundle
       - ./storage:/app/storage
     depends_on:
       - postgres
       - redis
-      - vite
       - mailhog
       - sidekiq
     ports:
       - 0.0.0.0:3000:3000
     env_file: .env
     environment:
-      - VITE_DEV_SERVER_HOST=vite
-      - NODE_ENV=development
-      - RAILS_ENV=development
+      - NODE_ENV=production
+      - RAILS_ENV=production
       - OPENAI_API_KEY=ollama
       - OPENAI_API_BASE=http://ollama:11434
       - OPENAI_GPT_MODEL=qwen2.5:3b
@@ -51,44 +44,40 @@ services:
     <<: *base
     image: chatwoot-rails:development
     volumes:
-      - ./:/app:delegated
-      - node_modules:/app/node_modules
-      - packs:/app/public/packs
-      - cache:/app/tmp/cache
-      - bundle:/usr/local/bundle
       - ./storage:/app/storage
     depends_on:
       - postgres
       - redis
       - mailhog
     environment:
-      - NODE_ENV=development
-      - RAILS_ENV=development
+      - NODE_ENV=production
+      - RAILS_ENV=production
       - OPENAI_API_KEY=ollama
       - OPENAI_API_BASE=http://ollama:11434
       - OPENAI_GPT_MODEL=qwen2.5:3b
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
 
-  vite:
-    <<: *base
-    build:
-      context: .
-      dockerfile: ./docker/dockerfiles/vite.Dockerfile
-    image: chatwoot-vite:development
-    volumes:
-      - ./:/app:delegated
-      - node_modules:/app/node_modules
-      - packs:/app/public/packs
-      - cache:/app/tmp/cache
-      - bundle:/usr/local/bundle
-    ports:
-      - "0.0.0.0:3036:3036" # Vite dev server
-    environment:
-      - VITE_DEV_SERVER_HOST=0.0.0.0
-      - NODE_ENV=development
-      - RAILS_ENV=development
-    entrypoint: docker/entrypoints/vite.sh
-    command: bin/vite dev
+  # vite dev server не нужен в production (assets уже прекомпилированы)
+  # vite:
+  #   <<: *base
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/dockerfiles/vite.Dockerfile
+  #   image: chatwoot-vite:development
+  #   volumes:
+  #     - ./:/app:delegated
+  #     - node_modules:/app/node_modules
+  #     - packs:/app/public/packs
+  #     - cache:/app/tmp/cache
+  #     - bundle:/usr/local/bundle
+  #   ports:
+  #     - "0.0.0.0:3036:3036" # Vite dev server
+  #   environment:
+  #     - VITE_DEV_SERVER_HOST=0.0.0.0
+  #     - NODE_ENV=development
+  #     - RAILS_ENV=development
+  #   entrypoint: docker/entrypoints/vite.sh
+  #   command: bin/vite dev
 
   postgres:
     image: pgvector/pgvector:pg16
