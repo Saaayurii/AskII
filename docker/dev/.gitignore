@@ -1,0 +1,8 @@
+# Local environment file (не коммитить!)
+.env.dev.local
+
+# Storage
+storage/
+
+# Logs
+*.log
