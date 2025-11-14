@@ -6,6 +6,12 @@
 
 ```bash
 cd docker/dev
+make init  # Всё в одной команде!
+```
+
+Или вручную:
+```bash
+cd docker/dev
 cp .env.dev .env.dev.local
 docker compose -f docker-compose.dev.yml --env-file .env.dev up -d
 docker compose -f docker-compose.dev.yml exec rails bundle exec rails db:create db:schema:load db:seed
@@ -75,6 +81,37 @@ docker compose -f docker-compose.dev.yml exec rails bundle exec rubocop -a
 
 # JS/Vue
 docker compose -f docker-compose.dev.yml exec rails pnpm eslint:fix
+```
+
+---
+
+## Администратор и Виджет
+
+### Создать администратора
+```bash
+make admin-create
+# Или напрямую:
+dcr bundle exec rails runner "
+account = Account.find_or_create_by!(name: 'Моя компания')
+user = User.find_or_create_by!(email: 'admin@example.com') do |u|
+  u.password = 'SecurePassword123'
+  u.password_confirmation = 'SecurePassword123'
+  u.name = 'Администратор'
+  u.account = account
+end
+AccountUser.find_or_create_by!(account: account, user: user, role: :administrator)
+"
+```
+
+### Получить код виджета
+```bash
+make widget-code
+```
+
+### Создать тестовую страницу виджета
+```bash
+make widget-test
+# Откройте test-widget.html в браузере
 ```
 
 ---

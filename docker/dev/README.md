@@ -210,6 +210,149 @@ docker compose -f docker-compose.dev.yml exec rails pnpm update
 docker compose -f docker-compose.dev.yml build rails
 ```
 
+### Создание администратора
+
+```bash
+# Вариант 1: Через Rails консоль
+docker compose -f docker-compose.dev.yml exec rails bundle exec rails console
+
+# В консоли выполните:
+account = Account.create!(name: 'Моя компания')
+user = User.create!(
+  email: 'admin@example.com',
+  password: 'SecurePassword123',
+  password_confirmation: 'SecurePassword123',
+  name: 'Администратор',
+  account: account
+)
+AccountUser.create!(
+  account: account,
+  user: user,
+  role: :administrator
+)
+
+# Вариант 2: Одной командой
+docker compose -f docker-compose.dev.yml exec rails bundle exec rails runner "
+account = Account.find_or_create_by!(name: 'Моя компания')
+user = User.find_or_create_by!(email: 'admin@example.com') do |u|
+  u.password = 'SecurePassword123'
+  u.password_confirmation = 'SecurePassword123'
+  u.name = 'Администратор'
+  u.account = account
+end
+AccountUser.find_or_create_by!(account: account, user: user, role: :administrator)
+puts 'Администратор создан: admin@example.com / SecurePassword123'
+"
+```
+
+### Настройка и тестирование виджета
+
+#### 1. Получение кода виджета
+
+После создания inbox в админ-панели:
+
+```bash
+# Зайти в Rails консоль
+docker compose -f docker-compose.dev.yml exec rails bundle exec rails console
+
+# Найти ваш inbox и получить код виджета
+inbox = Inbox.first  # или Inbox.find_by(name: 'Website')
+website_token = inbox.channel.website_token
+
+# Вывести код виджета
+puts <<-HTML
+<script>
+(function(d,t) {
+  var BASE_URL="http://localhost:3000";
+  var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=BASE_URL+"/packs/js/sdk.js";
+  g.defer = true;
+  g.async = true;
+  s.parentNode.insertBefore(g,s);
+  g.onload=function(){
+    window.chatwootSDK.run({
+      websiteToken: '#{website_token}',
+      baseUrl: BASE_URL
+    })
+  }
+})(document,"script");
+</script>
+HTML
+```
+
+#### 2. Тестирование виджета локально
+
+Создайте тестовый HTML файл:
+
+```bash
+# Создайте файл test-widget.html в корне проекта
+cat > test-widget.html << 'EOF'
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест виджета Chatwoot</title>
+</head>
+<body>
+    <h1>Тестовая страница виджета</h1>
+    <p>Виджет должен появиться в правом нижнем углу</p>
+
+    <!-- Вставьте сюда код виджета из шага 1 -->
+    <script>
+    (function(d,t) {
+      var BASE_URL="http://localhost:3000";
+      var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+      g.src=BASE_URL+"/packs/js/sdk.js";
+      g.defer = true;
+      g.async = true;
+      s.parentNode.insertBefore(g,s);
+      g.onload=function(){
+        window.chatwootSDK.run({
+          websiteToken: 'ЗАМЕНИТЕ_НА_ВАШ_ТОКЕН',
+          baseUrl: BASE_URL
+        })
+      }
+    })(document,"script");
+    </script>
+</body>
+</html>
+EOF
+
+# Откройте файл в браузере
+xdg-open test-widget.html  # Linux
+# или
+open test-widget.html      # macOS
+```
+
+#### 3. Настройка виджета через админ-панель
+
+1. Войдите в админ-панель: http://localhost:3000
+2. Перейдите в Settings → Inboxes
+3. Выберите нужный Inbox или создайте новый
+4. Настройте:
+   - Название
+   - Цвет виджета
+   - Приветственное сообщение
+   - Часы работы
+   - Добавьте агентов
+
+#### 4. Отладка виджета
+
+```bash
+# Проверить, что SDK доступен
+curl http://localhost:3000/packs/js/sdk.js
+
+# Проверить логи Rails для ошибок виджета
+docker compose -f docker-compose.dev.yml logs -f rails | grep -i widget
+
+# Включить debug режим в браузере
+# В консоли браузера (F12):
+window.chatwootSettings = {
+  debug: true
+}
+```
+
 ### Тестирование
 
 ```bash
