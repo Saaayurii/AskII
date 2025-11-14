@@ -84,7 +84,7 @@ RUN mkdir -p /app/log
 RUN if [ "$RAILS_ENV" = "production" ]; then \
   SECRET_KEY_BASE=precompile_placeholder \
   RAILS_LOG_TO_STDOUT=enabled \
-  FRONTEND_URL=http://localhost:3000 \
+  FRONTEND_URL=http://guiai-test.ru \
   ASSET_CDN_HOST= \
   bundle exec rake assets:precompile \
   && rm -rf spec node_modules tmp/cache; \
