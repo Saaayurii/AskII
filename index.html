@@ -1,14 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 
 <head>
-	<title>Test</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>AskII - Демонстрация виджета чата</title>
+	<script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-	<h1>Test</h1>
+<body class="bg-gray-50 min-h-screen">
+	<div class="container mx-auto px-4 py-8 max-w-4xl">
+		<div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+			<h1 class="text-4xl font-bold text-gray-800 mb-4">AskII Chat Widget</h1>
+			<p class="text-lg text-gray-600 mb-6">Демонстрация встроенного виджета чата</p>
 
-	<!-- Вставьте код виджета сюда -->
+			<div class="space-y-6">
+				<section>
+					<h2 class="text-2xl font-semibold text-gray-800 mb-3">Как использовать виджет:</h2>
+					<ol class="list-decimal list-inside space-y-2 text-gray-700">
+						<li class="pl-2">Найдите иконку чата в правом нижнем углу экрана</li>
+						<li class="pl-2">Нажмите на иконку, чтобы открыть окно чата</li>
+						<li class="pl-2">Введите ваше сообщение в текстовое поле</li>
+						<li class="pl-2">Нажмите Enter или кнопку отправки</li>
+						<li class="pl-2">Получите ответ от оператора поддержки</li>
+					</ol>
+				</section>
+
+				<section>
+					<h2 class="text-2xl font-semibold text-gray-800 mb-3">Возможности виджета:</h2>
+					<ul class="list-disc list-inside space-y-2 text-gray-700">
+						<li class="pl-2"><strong>Мгновенная связь</strong> - общайтесь с поддержкой в реальном времени</li>
+						<li class="pl-2"><strong>Отправка файлов</strong> - прикрепляйте скриншоты и документы</li>
+						<li class="pl-2"><strong>История сообщений</strong> - все ваши беседы сохраняются</li>
+						<li class="pl-2"><strong>Уведомления</strong> - получайте оповещения о новых сообщениях</li>
+						<li class="pl-2"><strong>Адаптивный дизайн</strong> - работает на всех устройствах</li>
+					</ul>
+				</section>
+
+				<section class="bg-blue-50 border-l-4 border-blue-500 p-4">
+					<h3 class="text-xl font-semibold text-blue-800 mb-2">💡 Совет</h3>
+					<p class="text-blue-700">
+						Виджет автоматически сохраняет вашу сессию. Даже если вы закроете окно чата
+						или обновите страницу, ваша переписка останется доступной.
+					</p>
+				</section>
+
+				<section>
+					<h2 class="text-2xl font-semibold text-gray-800 mb-3">Начните общение!</h2>
+					<p class="text-gray-700">
+						Нажмите на иконку чата в правом нижнем углу, чтобы начать.
+						Мы всегда рады помочь вам!
+					</p>
+				</section>
+			</div>
+		</div>
+
+		<div class="text-center text-gray-500 text-sm">
+			<p>Powered by AskII - современная платформа для общения с клиентами</p>
+		</div>
+	</div>
+
+	<!-- Код виджета AskII -->
 <script>
   (function(d,t) {
     var BASE_URL="http://172.16.0.188:3000";
