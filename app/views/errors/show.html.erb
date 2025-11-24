@@ -25,6 +25,35 @@
     50% { opacity: 1; }
   }
 
+  @keyframes flap-left {
+    0%, 100% { transform: rotate(0deg) scaleY(1); }
+    50% { transform: rotate(-15deg) scaleY(0.8); }
+  }
+
+  @keyframes flap-right {
+    0%, 100% { transform: rotate(0deg) scaleY(1); }
+    50% { transform: rotate(15deg) scaleY(0.8); }
+  }
+
+  .bat-container {
+    filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.5));
+  }
+
+  .bat-svg {
+    width: 120px;
+    height: 72px;
+  }
+
+  .left-wing {
+    transform-origin: 50px 30px;
+    animation: flap-left 0.3s ease-in-out infinite;
+  }
+
+  .right-wing {
+    transform-origin: 50px 30px;
+    animation: flap-right 0.3s ease-in-out infinite;
+  }
+
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
@@ -250,25 +279,28 @@
 <!-- Main content -->
 <div class="error-container">
   <div class="animate-float">
-    <% logo_url = GlobalConfig.get_value('LOGO') || GlobalConfig.get_value('LOGO_THUMBNAIL') rescue nil %>
-    <% if logo_url.present? %>
-      <img src="<%= logo_url %>" alt="Logo" style="height: 5rem; width: auto; filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.5));">
-    <% else %>
-      <div class="error-icon">
-        <% case @error_code %>
-        <% when 404 %>
-          🔍
-        <% when 403 %>
-          🔒
-        <% when 422 %>
-          ⚠️
-        <% when 500 %>
-          💥
-        <% else %>
-          ⚠️
-        <% end %>
-      </div>
-    <% end %>
+    <div class="bat-container">
+      <svg class="bat-svg" viewBox="0 0 100 60" width="120" height="72">
+        <g class="bat-wings">
+          <!-- Left wing -->
+          <path class="wing left-wing" d="M50 30 Q30 20 10 25 Q20 30 15 40 Q25 35 30 45 Q35 35 40 40 Q42 32 50 30" fill="#1e1b4b"/>
+          <!-- Right wing -->
+          <path class="wing right-wing" d="M50 30 Q70 20 90 25 Q80 30 85 40 Q75 35 70 45 Q65 35 60 40 Q58 32 50 30" fill="#1e1b4b"/>
+        </g>
+        <!-- Body -->
+        <ellipse cx="50" cy="35" rx="8" ry="12" fill="#1e1b4b"/>
+        <!-- Head -->
+        <circle cx="50" cy="22" r="8" fill="#1e1b4b"/>
+        <!-- Ears -->
+        <path d="M44 16 L42 8 L46 14" fill="#1e1b4b"/>
+        <path d="M56 16 L58 8 L54 14" fill="#1e1b4b"/>
+        <!-- Eyes -->
+        <circle cx="47" cy="21" r="2" fill="#60a5fa"/>
+        <circle cx="53" cy="21" r="2" fill="#60a5fa"/>
+        <!-- Feet -->
+        <path d="M46 46 Q44 52 42 50 M50 47 Q50 53 50 51 M54 46 Q56 52 58 50" stroke="#1e1b4b" stroke-width="2" fill="none"/>
+      </svg>
+    </div>
   </div>
 
   <div class="error-code animate-fade-in-up animation-delay-200">
