@@ -1,0 +1,119 @@
+services:
+  base: &base
+    build:
+      context: ../..
+      dockerfile: ./docker/dev/Dockerfile.dev
+      args:
+        BUNDLE_WITHOUT: ''
+        EXECJS_RUNTIME: 'Node'
+        RAILS_ENV: 'development'
+        RAILS_SERVE_STATIC_FILES: 'false'
+    tty: true
+    stdin_open: true
+    image: chatwoot:dev
+    env_file: .env.dev
+
+  rails:
+    <<: *base
+    volumes:
+      - ../../:/app:delegated
+      - node_modules:/app/node_modules
+      - bundle:/usr/local/bundle
+      - ./storage:/app/storage
+    depends_on:
+      - postgres
+      - redis
+      - mailhog
+    ports:
+      - "3000:3000"
+    env_file: .env.dev
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=4096
+      - NODE_ENV=development
+      - RAILS_ENV=development
+      - RAILS_SERVE_STATIC_FILES=false
+      - OPENAI_API_KEY=ollama
+      - OPENAI_API_BASE=http://ollama:11434
+      - OPENAI_GPT_MODEL=qwen2.5:3b
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+    entrypoint: docker/entrypoints/rails.sh
+    command: ["bundle", "exec", "rails", "s", "-p", "3000", "-b", "0.0.0.0"]
+
+  sidekiq:
+    <<: *base
+    volumes:
+      - ../../:/app:delegated
+      - node_modules:/app/node_modules
+      - bundle:/usr/local/bundle
+      - ./storage:/app/storage
+    depends_on:
+      - postgres
+      - redis
+      - mailhog
+    env_file: .env.dev
+    environment:
+      - NODE_ENV=development
+      - RAILS_ENV=development
+      - OPENAI_API_KEY=ollama
+      - OPENAI_API_BASE=http://ollama:11434
+      - OPENAI_GPT_MODEL=qwen2.5:3b
+    command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
+
+  vite:
+    <<: *base
+    volumes:
+      - ../../:/app:delegated
+      - node_modules:/app/node_modules
+      - bundle:/usr/local/bundle
+    ports:
+      - "3036:3036"
+    environment:
+      - VITE_DEV_SERVER_HOST=0.0.0.0
+      - NODE_ENV=development
+      - RAILS_ENV=development
+    command: ["pnpm", "dev"]
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: always
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_dev:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=chatwoot_dev
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  redis:
+    image: redis:alpine
+    restart: always
+    command: ["sh", "-c", "redis-server --requirepass \"$REDIS_PASSWORD\""]
+    env_file: .env.dev
+    volumes:
+      - redis_dev:/data/redis
+    ports:
+      - '6379:6379'
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_dev:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+    restart: unless-stopped
+
+volumes:
+  postgres_dev:
+  redis_dev:
+  ollama_dev:
+  node_modules:
+  bundle:

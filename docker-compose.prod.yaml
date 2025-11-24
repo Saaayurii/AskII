@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: always
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_prod:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=chatwoot
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=chatwoot_password
+
+  redis:
+    image: redis:alpine
+    restart: always
+    command: ["sh", "-c", "redis-server --requirepass \"redis_password\""]
+    volumes:
+      - redis_prod:/data/redis
+    ports:
+      - '6379:6379'
+
+  rails:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        BUNDLE_WITHOUT: 'development:test'
+        RAILS_ENV: 'production'
+        RAILS_SERVE_STATIC_FILES: 'true'
+    image: chatwoot:production
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=production
+      - NODE_ENV=production
+      - SECRET_KEY_BASE=a1b2c3d4e5f6789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+      - FRONTEND_URL=https://guiai-test.ru
+      - ACTION_CABLE_FRONTEND_URL=wss://guiai-test.ru/cable
+      - DEFAULT_LOCALE=ru
+      - ENABLE_ACCOUNT_SIGNUP=true
+      - REDIS_URL=redis://redis:6379
+      - REDIS_PASSWORD=redis_password
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=chatwoot_password
+      - POSTGRES_DATABASE=chatwoot
+      - MAILER_SENDER_EMAIL=СпросиИИ <relmontovr@yandex.ru>
+      - SMTP_DOMAIN=yandex.ru
+      - SMTP_ADDRESS=smtp.yandex.ru
+      - SMTP_PORT=587
+      - SMTP_USERNAME=relmontovr@yandex.ru
+      - SMTP_PASSWORD=zkmximlomtagavuj
+      - SMTP_AUTHENTICATION=plain
+      - SMTP_ENABLE_STARTTLS_AUTO=true
+      - RAILS_LOG_TO_STDOUT=true
+      - RAILS_SERVE_STATIC_FILES=true
+    volumes:
+      - storage_prod:/app/storage
+      - public_prod:/app/public
+    command: ["sh", "-c", "bundle exec rails db:chatwoot_prepare && bundle exec rails server -b 0.0.0.0 -p 3000"]
+
+  sidekiq:
+    image: chatwoot:production
+    depends_on:
+      - postgres
+      - redis
+      - rails
+    environment:
+      - RAILS_ENV=production
+      - NODE_ENV=production
+      - SECRET_KEY_BASE=a1b2c3d4e5f6789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+      - REDIS_URL=redis://redis:6379
+      - REDIS_PASSWORD=redis_password
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=chatwoot_password
+      - POSTGRES_DATABASE=chatwoot
+    volumes:
+      - storage_prod:/app/storage
+    command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
+
+volumes:
+  postgres_prod:
+  redis_prod:
+  storage_prod:
+  public_prod:
