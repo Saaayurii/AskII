@@ -1,79 +1,430 @@
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+  <title>Тест виджета | СпросиИИ</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Tahoma, Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      color: #e2e8f0;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated stars background */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+    }
+
+    /* Glowing orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.15;
+      animation: pulse 6s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    .orb1 {
+      width: 400px;
+      height: 400px;
+      background: #22c55e;
+      top: -100px;
+      left: -100px;
+    }
+
+    .orb2 {
+      width: 300px;
+      height: 300px;
+      background: #3b82f6;
+      bottom: -50px;
+      right: -50px;
+      animation-delay: 3s;
+    }
+
+    .orb3 {
+      width: 200px;
+      height: 200px;
+      background: #8b5cf6;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 1.5s;
+    }
+
+    /* Main content */
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 30px rgba(34, 197, 94, 0.5));
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #22c55e 0%, #3b82f6 50%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: #94a3b8;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card p {
+      color: #cbd5e1;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .feature {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-title {
+      font-weight: 600;
+      color: #f1f5f9;
+      font-size: 0.95rem;
+    }
+
+    .feature-desc {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 0.25rem;
+    }
+
+    .instructions {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .instructions h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #60a5fa;
+      margin-bottom: 0.75rem;
+    }
+
+    .instructions ol {
+      color: #cbd5e1;
+      padding-left: 1.25rem;
+      line-height: 1.8;
+    }
+
+    .instructions li {
+      margin-bottom: 0.5rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      color: #22c55e;
+      margin-top: 1rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.2);
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    .footer a {
+      color: #22c55e;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer a:hover {
+      color: #10b981;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 2rem 1rem;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+
+      .logo {
+        font-size: 3rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
 <body>
-</body>
+  <!-- Animated background stars -->
+  <div class="stars" id="stars"></div>
 
-<%
-  user_id = 1
-  user_hash = OpenSSL::HMAC.hexdigest(
-    'sha256',
-    @web_widget.hmac_token,
-    user_id.to_s
-  )
+  <!-- Glowing orbs -->
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
 
-%>
-<script>
+  <!-- Main content -->
+  <div class="container">
+    <div class="logo">🤖</div>
+    <h1>СпросиИИ</h1>
+    <p class="subtitle">Платформа для интеллектуальной поддержки клиентов</p>
 
-window.chatwootSettings = {
-  hideMessageBubble: false,
-  // showUnreadMessagesDialog: false,
-  // baseDomain: '.loca.lt',
-  position: '<%= @widget_position %>',
-  locale: 'en',
-  useBrowserLanguage: true,
-  type: '<%= @widget_type %>',
-  // showPopoutButton: true,
-  widgetStyle: '<%= @widget_style %>',
-  darkMode: '<%= @dark_mode %>',
-};
+    <div class="card">
+      <h2>💬 Тестирование виджета чата</h2>
+      <p>
+        Добро пожаловать на страницу тестирования виджета СпросиИИ!
+        Виджет чата появится в углу экрана и позволит вам протестировать
+        все функции общения с ИИ-ассистентом.
+      </p>
 
-(function(d,t) {
-  var BASE_URL = '';
-  var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-  g.src= BASE_URL + "/packs/js/sdk.js";
-  g.async = true;
-  s.parentNode.insertBefore(g,s);
-  g.onload=function(){
-    window.chatwootSDK.run({
-      websiteToken: '<%= @web_widget.website_token %>',
-      baseUrl: BASE_URL
-    })
-  }
-})(document,"script");
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">🧠</div>
+          <div class="feature-title">ИИ-ассистент</div>
+          <div class="feature-desc">Умные ответы на ваши вопросы</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-title">Мгновенно</div>
+          <div class="feature-desc">Быстрые ответы 24/7</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-title">Безопасно</div>
+          <div class="feature-desc">Защита данных</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🌐</div>
+          <div class="feature-title">Мультиязычный</div>
+          <div class="feature-desc">Поддержка разных языков</div>
+        </div>
+      </div>
 
-window.addEventListener('chatwoot:ready', function() {
-  console.log('chatwoot:ready', window.$chatwoot);
-  if (window.location.search.includes('setUser')) {
-    window.$chatwoot.setUser('<%= user_id %>', {
-      identifier_hash: '<%= user_hash %>',
-      email: 'jane@example.com',
-      name: 'Jane Doe',
-      phone_number: ''
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        Виджет активен
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📋 Как использовать</h2>
+      <div class="instructions">
+        <h3>Инструкция по тестированию:</h3>
+        <ol>
+          <li>Найдите иконку чата в углу экрана</li>
+          <li>Нажмите на неё, чтобы открыть окно чата</li>
+          <li>Введите ваш вопрос или сообщение</li>
+          <li>Получите ответ от ИИ-ассистента</li>
+          <li>Протестируйте различные сценарии общения</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>
+        © 2024 СпросиИИ — Умная платформа поддержки клиентов<br>
+        <a href="https://guiai-test.ru">Перейти в панель управления</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Generate random stars
+    const starsContainer = document.getElementById('stars');
+    const numStars = 80;
+
+    for (let i = 0; i < numStars; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      star.style.animationDuration = (2 + Math.random() * 2) + 's';
+      starsContainer.appendChild(star);
+    }
+  </script>
+
+  <%
+    user_id = 1
+    user_hash = OpenSSL::HMAC.hexdigest(
+      'sha256',
+      @web_widget.hmac_token,
+      user_id.to_s
+    )
+  %>
+
+  <script>
+    window.chatwootSettings = {
+      hideMessageBubble: false,
+      position: '<%= @widget_position %>',
+      locale: 'ru',
+      useBrowserLanguage: true,
+      type: '<%= @widget_type %>',
+      widgetStyle: '<%= @widget_style %>',
+      darkMode: '<%= @dark_mode %>',
+    };
+
+    (function(d,t) {
+      var BASE_URL = '';
+      var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+      g.src= BASE_URL + "/packs/js/sdk.js";
+      g.async = true;
+      s.parentNode.insertBefore(g,s);
+      g.onload=function(){
+        window.chatwootSDK.run({
+          websiteToken: '<%= @web_widget.website_token %>',
+          baseUrl: BASE_URL
+        })
+      }
+    })(document,"script");
+
+    window.addEventListener('chatwoot:ready', function() {
+      console.log('chatwoot:ready', window.$chatwoot);
+      if (window.location.search.includes('setUser')) {
+        window.$chatwoot.setUser('<%= user_id %>', {
+          identifier_hash: '<%= user_hash %>',
+          email: 'jane@example.com',
+          name: 'Jane Doe',
+          phone_number: ''
+        });
+      }
     });
-  }
-})
 
-window.addEventListener('chatwoot:error', function(e) {
-  console.log('chatwoot:error', e.detail)
-})
+    window.addEventListener('chatwoot:error', function(e) {
+      console.log('chatwoot:error', e.detail);
+    });
 
+    window.addEventListener('chatwoot:on-message', function(e) {
+      console.log('chatwoot:on-message', e.detail);
+    });
 
-window.addEventListener('chatwoot:on-message', function(e) {
-  console.log('chatwoot:on-message', e.detail)
-})
+    window.addEventListener('chatwoot:opened', function() {
+      console.log('chatwoot:opened');
+    });
 
-window.addEventListener('chatwoot:postback', function(e) {
-  console.log('chatwoot:postback', e.detail)
-})
-
-window.addEventListener('chatwoot:opened', function() {
-  console.log('chatwoot:opened')
-})
-
-window.addEventListener('chatwoot:closed', function() {
-  console.log('chatwoot:closed')
-})
-
-window.addEventListener('chatwoot:on-start-conversation', function(e) {
-  console.log('chatwoot:on-start-conversation', e.detail)
-})
-</script>
+    window.addEventListener('chatwoot:closed', function() {
+      console.log('chatwoot:closed');
+    });
+  </script>
+</body>
+</html>
