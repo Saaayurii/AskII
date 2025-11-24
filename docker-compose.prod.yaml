@@ -50,12 +50,12 @@ services:
       - POSTGRES_USERNAME=postgres
       - POSTGRES_PASSWORD=chatwoot_password
       - POSTGRES_DATABASE=chatwoot
-      - MAILER_SENDER_EMAIL=СпросиИИ <relmontovr@yandex.ru>
+      - MAILER_SENDER_EMAIL=СпросиИИ <Relmontov@yandex.ru>
       - SMTP_DOMAIN=yandex.ru
       - SMTP_ADDRESS=smtp.yandex.ru
       - SMTP_PORT=587
-      - SMTP_USERNAME=relmontovr@yandex.ru
-      - SMTP_PASSWORD=zkmximlomtagavuj
+      - SMTP_USERNAME=Relmontov@yandex.ru
+      - SMTP_PASSWORD=gleuehlngajpgzjp
       - SMTP_AUTHENTICATION=plain
       - SMTP_ENABLE_STARTTLS_AUTO=true
       - RAILS_LOG_TO_STDOUT=true
