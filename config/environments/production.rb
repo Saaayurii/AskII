@@ -94,6 +94,14 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
+  # ActionMailer URL configuration
+  frontend_uri = URI.parse(ENV.fetch('FRONTEND_URL', 'http://localhost:3000'))
+  config.action_mailer.default_url_options = {
+    protocol: frontend_uri.scheme,
+    host: frontend_uri.host,
+    port: frontend_uri.port == frontend_uri.default_port ? nil : frontend_uri.port
+  }.compact
+
   # Set this to appropriate ingress service for which the options are :
   # :relay for Exim, Postfix, Qmail
   # :mailgun for Mailgun
