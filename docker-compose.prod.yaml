@@ -34,6 +34,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - ollama
     ports:
       - "3000:3000"
     environment:
@@ -60,6 +61,9 @@ services:
       - SMTP_ENABLE_STARTTLS_AUTO=true
       - RAILS_LOG_TO_STDOUT=true
       - RAILS_SERVE_STATIC_FILES=true
+      - OPENAI_API_KEY=ollama
+      - OPENAI_API_BASE=http://ollama:11434
+      - OPENAI_GPT_MODEL=qwen2.5:3b
     volumes:
       - storage_prod:/app/storage
       - public_prod:/app/public
@@ -71,6 +75,7 @@ services:
       - postgres
       - redis
       - rails
+      - ollama
     environment:
       - RAILS_ENV=production
       - NODE_ENV=production
@@ -92,12 +97,26 @@ services:
       - SMTP_AUTHENTICATION=plain
       - SMTP_ENABLE_STARTTLS_AUTO=true
       - RAILS_LOG_TO_STDOUT=true
+      - OPENAI_API_KEY=ollama
+      - OPENAI_API_BASE=http://ollama:11434
+      - OPENAI_GPT_MODEL=qwen2.5:3b
     volumes:
       - storage_prod:/app/storage
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
+
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_prod:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
 
 volumes:
   postgres_prod:
   redis_prod:
   storage_prod:
   public_prod:
+  ollama_prod:
