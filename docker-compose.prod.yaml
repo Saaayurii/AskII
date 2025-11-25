@@ -75,12 +75,23 @@ services:
       - RAILS_ENV=production
       - NODE_ENV=production
       - SECRET_KEY_BASE=a1b2c3d4e5f6789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+      - FRONTEND_URL=https://guiai-test.ru
+      - DEFAULT_LOCALE=ru
       - REDIS_URL=redis://redis:6379
       - REDIS_PASSWORD=redis_password
       - POSTGRES_HOST=postgres
       - POSTGRES_USERNAME=postgres
       - POSTGRES_PASSWORD=chatwoot_password
       - POSTGRES_DATABASE=chatwoot
+      - MAILER_SENDER_EMAIL=СпросиИИ <Relmontov@yandex.ru>
+      - SMTP_DOMAIN=yandex.ru
+      - SMTP_ADDRESS=smtp.yandex.ru
+      - SMTP_PORT=587
+      - SMTP_USERNAME=Relmontov@yandex.ru
+      - SMTP_PASSWORD=gleuehlngajpgzjp
+      - SMTP_AUTHENTICATION=plain
+      - SMTP_ENABLE_STARTTLS_AUTO=true
+      - RAILS_LOG_TO_STDOUT=true
     volumes:
       - storage_prod:/app/storage
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
